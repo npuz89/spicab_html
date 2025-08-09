@@ -6,6 +6,7 @@ const subscriberData = {
         last_name: 'Иванов',
         middle_name: 'Иванович',
         login: 'ivanov_123',
+        address: 'г. Москва, ул. Ленина, д. 10, кв. 5',
         balance: 1500,
         tariff_id: 1,
         tariff_change_date: '2025-07-01T00:00:00Z'
@@ -108,6 +109,7 @@ function loadData() {
         // Populate subscriber data
         document.getElementById('user-name').textContent = `${subscriberData.subscriber.last_name} ${subscriberData.subscriber.first_name} ${subscriberData.subscriber.middle_name}`;
         document.getElementById('user-login').textContent = `Логин: ${subscriberData.subscriber.login}`;
+        document.getElementById('user-address').textContent = `Адрес: ${subscriberData.subscriber.address}`;
         document.getElementById('tariff-name').textContent = subscriberData.tariff.name;
         document.getElementById('tariff-price').textContent = formatCurrency(subscriberData.tariff.price);
         document.getElementById('tariff-change-date').textContent = `Дата смены тарифа: ${formatDate(subscriberData.subscriber.tariff_change_date)}`;
