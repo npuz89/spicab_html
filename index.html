@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-sans">
+    <!-- Loading Screen -->
+    <div id="loading" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-gray-600">Загрузка...</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="app" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                            </svg>
+                        </div>
+                        <h1 class="text-xl md:text-2xl font-bold text-gray-900">Личный кабинет</h1>
+                    </div>
+                    <button id="burger-menu" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <nav id="nav-menu" class="hidden md:flex md:items-center md:space-x-6">
+                        <button onclick="showChangeTariffModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Смена тарифа</button>
+                        <button onclick="showPaymentsModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">История платежей</button>
+                        <button onclick="showNotificationsModal()" class="relative text-gray-600 hover:text-indigo-600 font-medium transition-colors">
+                            Оповещения
+                            <span id="notification-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+                        </button>
+                        <button class="text-gray-600 hover:text-red-600 font-medium transition-colors">Выход</button>
+                    </nav>
+                </div>
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200 mt-4">
+                    <div class="flex flex-col space-y-4 px-4 py-4">
+                        <button onclick="showChangeTariffModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors text-left">Смена тарифа</button>
+                        <button onclick="showPaymentsModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors text-left">История платежей</button>
+                        <button onclick="showNotificationsModal()" class="relative text-gray-600 hover:text-indigo-600 font-medium transition-colors text-left">
+                            Оповещения
+                            <span id="mobile-notification-badge" class="absolute top-0 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+                        </button>
+                        <button class="text-gray-600 hover:text-red-600 font-medium transition-colors text-left">Выход</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+                <!-- User Info Card -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 md:px-6 py-6 md:py-8">
+                        <div class="flex items-center space-x-3 md:space-x-4">
+                            <div class="w-10 md:w-12 h-10 md:h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                <svg class="w-5 md:w-6 h-5 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <div class="text-white">
+                                <h2 id="user-name" class="text-lg md:text-xl font-bold"></h2>
+                                <p id="user-login" class="text-indigo-100 text-sm"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-4 md:px-6 py-4 md:py-6 space-y-4 md:space-y-6">
+                        <!-- Tariff Info -->
+                        <div class="border rounded-lg p-3 md:p-4 card-hover">
+                            <div class="flex flex-col md:flex-row justify-between items-start">
+                                <div class="flex-1 mb-3 md:mb-0">
+                                    <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-2">Текущий тариф</h3>
+                                    <button id="tariff-name" onclick="showTariffModal()" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm md:text-base underline"></button>
+                                    <p id="tariff-change-date" class="text-xs md:text-sm text-gray-600 mt-1"></p>
+                                </div>
+                                <div class="text-left md:text-right">
+                                    <p id="tariff-price" class="text-lg md:text-xl font-bold text-gray-900"></p>
+                                    <p class="text-xs md:text-sm text-gray-600">в месяц</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Balance and Days -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                            <div class="bg-gray-50 rounded-lg p-3 md:p-4">
+                                <h4 class="text-xs md:text-sm font-medium text-gray-600 mb-2">Текущий баланс</h4>
+                                <p id="balance" class="text-xl md:text-2xl font-bold"></p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-3 md:p-4">
+                                <h4 class="text-xs md:text-sm font-medium text-gray-600 mb-2">До окончания тарифа</h4>
+                                <p id="days-left" class="text-xl md:text-2xl font-bold text-gray-900"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notifications Summary -->
+                <div class="bg-white rounded-xl shadow-lg p-4 md:p-6">
+                    <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Последние уведомления</h3>
+                    <div id="notifications-list" class="space-y-3"></div>
+                    <button onclick="showNotificationsModal()" class="mt-3 md:mt-4 text-indigo-600 hover:text-indigo-800 font-medium text-sm">Все уведомления</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Tariff Modal -->
+        <div id="tariff-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl w-full max-w-md p-4 md:p-6 modal-content">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">Информация о тарифе</h3>
+                    <button onclick="closeTariffModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="tariff-details" class="mb-6"></div>
+                <div class="flex justify-end space-x-4">
+                    <button onclick="showChangeTariffModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">Сменить тариф</button>
+                    <button onclick="closeTariffModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors">Отмена</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Tariff Modal -->
+        <div id="change-tariff-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl w-full max-w-md p-4 md:p-6 modal-content">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">Смена тарифа</h3>
+                    <button onclick="closeChangeTariffModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="tariffs-list" class="space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- Notifications Modal -->
+        <div id="notifications-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl w-full max-w-md p-4 md:p-6 max-h-[80vh] overflow-y-auto modal-content">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">Уведомления</h3>
+                    <button onclick="closeNotificationsModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="all-notifications-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- Payment History Modal -->
+        <div id="payments-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl w-full max-w-md md:max-w-4xl p-4 md:p-6 max-h-[90vh] overflow-y-auto modal-content">
+                <div class="flex justify-between items-start mb-4 md:mb-6">
+                    <div>
+                        <h3 class="text-lg md:text-xl font-bold text-gray-900">История платежей</h3>
+                        <div id="payment-stats" class="flex flex-col md:flex-row md:space-x-6 mt-2 text-xs md:text-sm text-gray-600 gap-2 md:gap-0"></div>
+                    </div>
+                    <button onclick="closePaymentsModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <!-- Filter buttons -->
+                <div class="flex flex-wrap gap-2 mb-4 md:mb-6">
+                    <button onclick="filterPayments('all')" class="px-3 md:px-4 py-2 rounded-lg font-medium transition-colors bg-indigo-600 text-white text-sm" id="filter-all">Все</button>
+                    <button onclick="filterPayments('completed')" class="px-3 md:px-4 py-2 rounded-lg font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm" id="filter-completed">Выполненные</button>
+                    <button onclick="filterPayments('pending')" class="px-3 md:px-4 py-2 rounded-lg font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm" id="filter-pending">В обработке</button>
+                </div>
+                <!-- Payments table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-2 md:py-3 px-2 font-semibold text-gray-700 text-xs md:text-sm">Дата</th>
+                                <th class="text-left py-2 md:py-3 px-2 font-semibold text-gray-700 text-xs md:text-sm">Сумма</th>
+                                <th class="text-left py-2 md:py-3 px-2 font-semibold text-gray-700 text-xs md:text-sm">Способ оплаты</th>
+                                <th class="text-left py-2 md:py-3 px-2 font-semibold text-gray-700 text-xs md:text-sm">Описание</th>
+                                <th class="text-left py-2 md:py-3 px-2 font-semibold text-gray-700 text-xs md:text-sm">Статус</th>
+                                <th class="text-left py-2 md:py-3 px-2 font-semibold text-gray-700 text-xs md:text-sm">ID операции</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
