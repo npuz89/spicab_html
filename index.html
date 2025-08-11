@@ -40,11 +40,11 @@
                         <button onclick="showPaymentsModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors" data-i18n="payment_history">История платежей</button>
                         <button onclick="showNotificationsModal()" class="relative text-gray-600 hover:text-indigo-600 font-medium transition-colors" data-i18n="notifications">
                             Оповещения
-                            <span id="notification-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
+                            <span id="notification-badge" class="absolute -top-1 -right-4 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"></span>
                         </button>
                         <button onclick="showChangePasswordModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors" data-i18n="change_password">Сменить пароль</button>
                         <div class="relative">
-                            <select id="language-selector" class="text-gray-600 hover:text-indigo-600 font-medium bg-transparent border-none focus:outline-none cursor-pointer language-selector w-24" onchange="changeLanguage(this.value)">
+                            <select id="language-selector" class="text-gray-600 hover:text-indigo-600 font-medium bg-transparent border-none focus:outline-none cursor-pointer language-selector w-14" onchange="changeLanguage(this.value)">
                                 <option value="ru">RU</option>
                                 <option value="uz">UZ</option>
                                 <option value="en">EN</option>
@@ -78,8 +78,8 @@
 
         <!-- Main Content -->
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
-                <!-- User Info Card -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Subscriber Card -->
                 <div class="lg:col-span-2 bg-white rounded-xl shadow-lg overflow-hidden">
                     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 md:px-6 py-6 md:py-8">
                         <div class="text-white space-y-2">
@@ -132,34 +132,56 @@
                     </div>
                 </div>
 
-                <div class="blocks">
-                <!-- Services Block -->
-                <div class="bg-white rounded-xl shadow-lg p-4 md:p-6">
-                    <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="services">Услуги</h3>
-                    <div id="services-list" class="space-y-3"></div>
-                </div>
-                <!-- Documents Block -->
-                <div class="bg-white rounded-xl shadow-lg p-4 md:p-6">
-                    <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="documents">Документы</h3>
-                    <div id="documents-list" class="space-y-3"></div>
-                </div>
-                <!-- Discount Block -->
-                <div class="bg-white rounded-xl shadow-lg p-4 md:p-6">
-                    <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="discount">Скидка</h3>
-                    <div id="discount-display" class="discount-block"></div>
-                </div>
+                <!-- Right Blocks -->
+                <div class="lg:col-span-1">
+                     <!-- Notifications Summary -->
+                    <div class="bg-white rounded-xl shadow-lg p-4 md:p-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="recent_notifications">Последние уведомления</h3>
+                        <div id="notifications-list" class="space-y-3"></div>
+                        <button onclick="showNotificationsModal()" class="mt-3 md:mt-4 text-indigo-600 hover:text-indigo-800 font-medium text-sm" data-i18n="all_notifications">Все уведомления</button>
+                    <divclass="space-y-3"></div>
+                    </div>
+                    <!-- Services Block -->
+                    <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="services">Услуги</h3>
+                        <div id="services-list" class="space-y-3"></div>
+                    </div>
+                    
+                    <!-- Documents Block -->
+                    <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="documents">Документы</h3>
+                        <div id="documents-list" class="space-y-3"></div>
+                    </div>
+                    
+                    <!-- Discount Block with Circular Progress Bar -->
+                    <div id="discount-block" class="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="discount">Скидка</h3>
+                        <div class="relative w-32 h-32">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="50%" cy="50%" r="40%" fill="none" stroke="#e5e7eb" stroke-width="8" />
+                                <circle cx="50%" cy="50%" r="40%" fill="none" stroke="#10B981" stroke-width="8" stroke-dasharray="325" stroke-dashoffset="0" />
+                            </svg>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                <span id="discount-value" class="text-2xl font-bold text-green-600">15%</span>
+                                <p class="text-xs text-gray-600">Max 15%</p>
+                            </div>
+                        </div>
+                    </div>
 
+                   
                 </div>
-                <!-- Notifications Summary -->
-                <div class="bg-white rounded-xl shadow-lg p-4 md:p-6">
-                    <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="recent_notifications">Последние уведомления</h3>
-                    <div id="notifications-list" class="space-y-3"></div>
-                    <button onclick="showNotificationsModal()" class="mt-3 md:mt-4 text-indigo-600 hover:text-indigo-800 font-medium text-sm" data-i18n="all_notifications">Все уведомления</button>
-                </div>
+            </div>
+        </main>
 
-                
-          </main>
-   
+        <!-- Footer -->
+       <footer class="bg-white text-black py-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 <a href="https://spi.uz" target="_blank" class="underline">SPECTR IT</a></p>
+            <p>Телефон: <a href="tel:+998787772030" class="underline">+998 78 777-20-30</a></p>
+            <p>Telegram: <a href="https://t.me/SpectrIT" target="_blank" class="underline">@SpectrIT</a></p>
+            <p>Email: <a href="mailto:info@spi.uz" class="underline">info@spi.uz</a></p>
+        </div>
+    </footer>
 
         <!-- Tariff Modal -->
         <div id="tariff-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden flex items-center justify-center z-50 p-4">
@@ -174,7 +196,7 @@
                 </div>
                 <div id="tariff-details" class="mb-6"></div>
                 <div class="flex justify-end space-x-4">
-                    <button onclick="showChangeTariffModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors" data-i18n="change_tariff">Сменить тариф</button>
+                    <button onclick="showChangeTariffModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors" data-i18n="change_tariff">Смена тарифа</button>
                     <button onclick="closeTariffModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors" data-i18n="cancel">Отмена</button>
                 </div>
             </div>

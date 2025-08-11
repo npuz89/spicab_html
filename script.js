@@ -5,8 +5,8 @@ const subscriberData = {
         first_name: 'Иван',
         last_name: 'Иванов',
         middle_name: 'Иванович',
-        login: 'ivanov_123',
-        address: 'г. Москва, ул. Ленина, д. 10, кв. 5',
+        login: 'sp998000000000',
+        address: 'г. Ташкент, ул. Саракульская, д. 10, кв. 5',
         contract_number: '19061234',
         phone_number_1: '+998 90 123 45 67',
         phone_number_2: '+998 90 987 65 43',
@@ -232,7 +232,7 @@ let currentLanguage = 'ru';
 
 // Utility functions
 function formatCurrency(amount) {
-    const currency = currentLanguage === 'uz' ? 'UZS' : 'RUB';
+    const currency = 'UZS'; // Установим UZS как фиксированную валюту для всех языков
     return new Intl.NumberFormat(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US', {
         style: 'currency',
         currency: currency
@@ -350,8 +350,230 @@ function loadData() {
         }
 
         const notificationsList = document.getElementById('notifications-list');
-        notificationsList.innerHTML = notifications.slice(0, 3).map(notification => `
-            <div class="notification-item p-3 md:p-4 rounded-lg border ${!notification.is_read ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'} cursor-pointer" onclick="markNotificationRead(${notification.id})">
+        if (notificationsList) {
+            notificationsList.innerHTML = notifications.slice(0, 3).map(notification => `
+                <div class="notification-item p-3 md:p-4 rounded-lg border ${!notification.is_read ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'} cursor-pointer" onclick="markNotificationRead(${notification.id})">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2">
+                                <h4 class="font-medium text-gray-900 text-sm md:text-base">${notification.title}</h4>
+                                ${!notification.is_read ? '<span class="w-2 h-2 bg-blue-500 rounded-full"></span>' : ''}
+                            </div>
+                            <p class="text-xs md:text-sm text-gray-600 mt-1">${notification.message}</p>
+                            <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_date).toLocaleString(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US')}</p>
+                        </div>
+                        <div class="w-3 h-3 rounded-full ml-3 ${getNotificationTypeColor(notification.type)}"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Populate payment stats
+        const paymentStatsElement = document.getElementById('payment-stats');
+        if (paymentStatsElement) {
+            paymentStatsElement.innerHTML = `
+                <span>${translations[currentLanguage].total_payments_label || 'Всего платежей'}: <strong>${paymentStats.total_payments}</strong></span>
+                <span>${translations[currentLanguage].completed_payments_label || 'Выполнено'}: <strong>${paymentStats.completed_payments}</strong></span>
+                <span>${translations[currentLanguage].total_amount_label || 'Общая сумма'}: <strong>${formatCurrency(paymentStats.total_amount)}</strong></span>
+            `;
+        }
+
+        // Populate services
+        const servicesList = document.getElementById('services-list');
+        if (servicesList) {
+            servicesList.innerHTML = `
+                <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
+                    <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[0].name}</h4>
+                    <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[0].status)}</p>
+                </div>
+                <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
+                    <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[1].name}</h4>
+                    <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[1].status)}</p>
+                </div>
+            `;
+        }
+
+        // Populate discount
+        const discountValue = parseInt(discount.value); // Assuming '15%'
+        const maxDiscount = 15;
+        const circumference = 251.2;
+        const offset = circumference - (discountValue / maxDiscount) * circumference;
+        const discountSvg = document.querySelector('#discount-block svg circle:nth-child(2)');
+        if (discountSvg) {
+            discountSvg.style.strokeDashoffset = offset.toFixed(1);
+        }
+        const discountValueElement = document.getElementById('discount-value');
+        if (discountValueElement) {
+            discountValueElement.textContent = `${discount.value}`;
+        }
+
+        // Populate documents
+        const documentsList = document.getElementById('documents-list');
+        if (documentsList) {
+            documentsList.innerHTML = documents.map(doc => `
+                <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
+                    <a href="${doc.url}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm md:text-base">${doc.name}</a>
+                    <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].type_label}: ${doc.type.toUpperCase()}</p>
+                </div>
+            `).join('');
+        }
+
+        // Initial payments load
+        renderPayments();
+    }, 1000); // Simulate loading
+}
+
+// Modal controls
+function showTariffModal() {
+    selectedTariff = subscriberData.tariff;
+    const tariffDetails = document.getElementById('tariff-details');
+    if (tariffDetails) {
+        tariffDetails.innerHTML = `
+            <h4 class="font-semibold text-gray-900 text-base md:text-lg">${selectedTariff.name}</h4>
+            <p class="text-gray-600 text-xs md:text-sm mt-2">${selectedTariff.description}</p>
+            <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${selectedTariff.speed}</p>
+            <p class="font-bold text-base md:text-lg mt-2">${formatCurrency(selectedTariff.price)}</p>
+            <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
+        `;
+    }
+    const tariffModal = document.getElementById('tariff-modal');
+    if (tariffModal) {
+        tariffModal.classList.remove('hidden');
+    }
+}
+
+function closeTariffModal() {
+    const tariffModal = document.getElementById('tariff-modal');
+    if (tariffModal) {
+        tariffModal.classList.add('hidden');
+    }
+}
+
+function showChangeTariffModal() {
+    const tariffsList = document.getElementById('tariffs-list');
+    if (tariffsList) {
+        tariffsList.innerHTML = tariffs.map(tariff => `
+            <div class="tariff-card border rounded-lg p-3 md:p-4 cursor-pointer transition-colors ${subscriberData.subscriber.tariff_id === tariff.id ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-gray-300'}" onclick="changeTariff(${tariff.id})">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 text-sm md:text-base flex items-center">
+                            ${tariff.name}
+                            ${subscriberData.subscriber.tariff_id === tariff.id ? `<span class="ml-2 bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">${translations[currentLanguage].current_label}</span>` : ''}
+                        </h4>
+                        <p class="text-gray-600 text-xs md:text-sm">${tariff.description}</p>
+                        <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${tariff.speed}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-base md:text-lg">${formatCurrency(tariff.price)}</p>
+                        <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    const changeTariffModal = document.getElementById('change-tariff-modal');
+    if (changeTariffModal) {
+        changeTariffModal.classList.remove('hidden');
+    }
+    const tariffModal = document.getElementById('tariff-modal');
+    if (tariffModal) {
+        tariffModal.classList.add('hidden');
+    }
+    toggleMobileMenu(false);
+}
+
+function closeChangeTariffModal() {
+    const changeTariffModal = document.getElementById('change-tariff-modal');
+    if (changeTariffModal) {
+        changeTariffModal.classList.add('hidden');
+    }
+}
+
+function showEditPhonesModal() {
+    const editPhone1 = document.getElementById('edit-phone-1');
+    const editPhone2 = document.getElementById('edit-phone-2');
+    if (editPhone1 && editPhone2) {
+        editPhone1.value = subscriberData.subscriber.phone_number_1 || '';
+        editPhone2.value = subscriberData.subscriber.phone_number_2 || '';
+    }
+    const editPhonesModal = document.getElementById('edit-phones-modal');
+    if (editPhonesModal) {
+        editPhonesModal.classList.remove('hidden');
+    }
+    toggleMobileMenu(false);
+}
+
+function closeEditPhonesModal() {
+    const editPhonesModal = document.getElementById('edit-phones-modal');
+    if (editPhonesModal) {
+        editPhonesModal.classList.add('hidden');
+    }
+}
+
+function savePhoneNumbers() {
+    const editPhone1 = document.getElementById('edit-phone-1');
+    const editPhone2 = document.getElementById('edit-phone-2');
+    if (editPhone1 && editPhone2) {
+        subscriberData.subscriber.phone_number_1 = editPhone1.value;
+        subscriberData.subscriber.phone_number_2 = editPhone2.value;
+    }
+    closeEditPhonesModal();
+    loadData();
+}
+
+function showChangePasswordModal() {
+    const currentPassword = document.getElementById('current-password');
+    const newPassword = document.getElementById('new-password');
+    const confirmPassword = document.getElementById('confirm-password');
+    if (currentPassword && newPassword && confirmPassword) {
+        currentPassword.value = '';
+        newPassword.value = '';
+        confirmPassword.value = '';
+    }
+    const changePasswordModal = document.getElementById('change-password-modal');
+    if (changePasswordModal) {
+        changePasswordModal.classList.remove('hidden');
+    }
+    toggleMobileMenu(false);
+}
+
+function closeChangePasswordModal() {
+    const changePasswordModal = document.getElementById('change-password-modal');
+    if (changePasswordModal) {
+        changePasswordModal.classList.add('hidden');
+    }
+}
+
+function savePassword() {
+    const currentPassword = document.getElementById('current-password');
+    const newPassword = document.getElementById('new-password');
+    const confirmPassword = document.getElementById('confirm-password');
+    if (currentPassword && newPassword && confirmPassword) {
+        const currentPassValue = currentPassword.value;
+        const newPassValue = newPassword.value;
+        const confirmPassValue = confirmPassword.value;
+
+        if (currentPassValue !== subscriberData.subscriber.password) {
+            alert(translations[currentLanguage].invalid_current_password);
+            return;
+        }
+
+        if (newPassValue !== confirmPassValue) {
+            alert(translations[currentLanguage].password_mismatch);
+            return;
+        }
+
+        subscriberData.subscriber.password = newPassValue;
+        closeChangePasswordModal();
+        alert(translations[currentLanguage].password_changed);
+    }
+}
+
+function showNotificationsModal() {
+    const allNotificationsList = document.getElementById('all-notifications-list');
+    if (allNotificationsList) {
+        allNotificationsList.innerHTML = notifications.length === 0 ? `<p class="text-gray-500 text-center py-8 text-sm">${translations[currentLanguage].no_notifications}</p>` : notifications.map(notification => `
+            <div class="notification-item p-3 md:p-4 rounded-lg border cursor-pointer transition-colors ${!notification.is_read ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}" onclick="markNotificationRead(${notification.id})">
                 <div class="flex justify-between items-start">
                     <div class="flex-1">
                         <div class="flex items-center space-x-2">
@@ -365,202 +587,81 @@ function loadData() {
                 </div>
             </div>
         `).join('');
-
-        // Populate payment stats
-        document.getElementById('payment-stats').innerHTML = `
-            <span>${translations[currentLanguage].total_payments_label || 'Всего платежей'}: <strong>${paymentStats.total_payments}</strong></span>
-            <span>${translations[currentLanguage].completed_payments_label || 'Выполнено'}: <strong>${paymentStats.completed_payments}</strong></span>
-            <span>${translations[currentLanguage].total_amount_label || 'Общая сумма'}: <strong>${formatCurrency(paymentStats.total_amount)}</strong></span>
-        `;
-
-        // Populate services
-        document.getElementById('services-list').innerHTML = `
-            <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
-                <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[0].name}</h4>
-                <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[0].status)}</p>
-            </div>
-            <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
-                <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[1].name}</h4>
-                <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[1].status)}</p>
-            </div>
-        `;
-
-        // Populate discount
-        document.getElementById('discount-display').textContent = discount.value;
-
-        // Populate documents
-        document.getElementById('documents-list').innerHTML = documents.map(doc => `
-            <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
-                <a href="${doc.url}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm md:text-base">${doc.name}</a>
-                <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].type_label}: ${doc.type.toUpperCase()}</p>
-            </div>
-        `).join('');
-
-        // Initial payments load
-        renderPayments();
-    }, 1000); // Simulate loading
-}
-
-// Modal controls
-function showTariffModal() {
-    selectedTariff = subscriberData.tariff;
-    document.getElementById('tariff-details').innerHTML = `
-        <h4 class="font-semibold text-gray-900 text-base md:text-lg">${selectedTariff.name}</h4>
-        <p class="text-gray-600 text-xs md:text-sm mt-2">${selectedTariff.description}</p>
-        <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${selectedTariff.speed}</p>
-        <p class="font-bold text-base md:text-lg mt-2">${formatCurrency(selectedTariff.price)}</p>
-        <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
-    `;
-    document.getElementById('tariff-modal').classList.remove('hidden');
-}
-
-function closeTariffModal() {
-    document.getElementById('tariff-modal').classList.add('hidden');
-}
-
-function showChangeTariffModal() {
-    document.getElementById('tariffs-list').innerHTML = tariffs.map(tariff => `
-        <div class="tariff-card border rounded-lg p-3 md:p-4 cursor-pointer transition-colors ${subscriberData.subscriber.tariff_id === tariff.id ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-gray-300'}" onclick="changeTariff(${tariff.id})">
-            <div class="flex justify-between items-start">
-                <div class="flex-1">
-                    <h4 class="font-semibold text-gray-900 text-sm md:text-base flex items-center">
-                        ${tariff.name}
-                        ${subscriberData.subscriber.tariff_id === tariff.id ? `<span class="ml-2 bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">${translations[currentLanguage].current_label}</span>` : ''}
-                    </h4>
-                    <p class="text-gray-600 text-xs md:text-sm">${tariff.description}</p>
-                    <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${tariff.speed}</p>
-                </div>
-                <div class="text-right">
-                    <p class="font-bold text-base md:text-lg">${formatCurrency(tariff.price)}</p>
-                    <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
-                </div>
-            </div>
-        </div>
-    `).join('');
-    document.getElementById('change-tariff-modal').classList.remove('hidden');
-    document.getElementById('tariff-modal').classList.add('hidden');
-    toggleMobileMenu(false);
-}
-
-function closeChangeTariffModal() {
-    document.getElementById('change-tariff-modal').classList.add('hidden');
-}
-
-function showEditPhonesModal() {
-    document.getElementById('edit-phone-1').value = subscriberData.subscriber.phone_number_1 || '';
-    document.getElementById('edit-phone-2').value = subscriberData.subscriber.phone_number_2 || '';
-    document.getElementById('edit-phones-modal').classList.remove('hidden');
-    toggleMobileMenu(false);
-}
-
-function closeEditPhonesModal() {
-    document.getElementById('edit-phones-modal').classList.add('hidden');
-}
-
-function savePhoneNumbers() {
-    subscriberData.subscriber.phone_number_1 = document.getElementById('edit-phone-1').value;
-    subscriberData.subscriber.phone_number_2 = document.getElementById('edit-phone-2').value;
-    closeEditPhonesModal();
-    loadData();
-}
-
-function showChangePasswordModal() {
-    document.getElementById('current-password').value = '';
-    document.getElementById('new-password').value = '';
-    document.getElementById('confirm-password').value = '';
-    document.getElementById('change-password-modal').classList.remove('hidden');
-    toggleMobileMenu(false);
-}
-
-function closeChangePasswordModal() {
-    document.getElementById('change-password-modal').classList.add('hidden');
-}
-
-function savePassword() {
-    const currentPassword = document.getElementById('current-password').value;
-    const newPassword = document.getElementById('new-password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
-
-    if (currentPassword !== subscriberData.subscriber.password) {
-        alert(translations[currentLanguage].invalid_current_password);
-        return;
     }
-
-    if (newPassword !== confirmPassword) {
-        alert(translations[currentLanguage].password_mismatch);
-        return;
+    const notificationsModal = document.getElementById('notifications-modal');
+    if (notificationsModal) {
+        notificationsModal.classList.remove('hidden');
     }
-
-    subscriberData.subscriber.password = newPassword;
-    closeChangePasswordModal();
-    alert(translations[currentLanguage].password_changed);
-}
-
-function showNotificationsModal() {
-    document.getElementById('all-notifications-list').innerHTML = notifications.length === 0 ? `<p class="text-gray-500 text-center py-8 text-sm">${translations[currentLanguage].no_notifications}</p>` : notifications.map(notification => `
-        <div class="notification-item p-3 md:p-4 rounded-lg border cursor-pointer transition-colors ${!notification.is_read ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}" onclick="markNotificationRead(${notification.id})">
-            <div class="flex justify-between items-start">
-                <div class="flex-1">
-                    <div class="flex items-center space-x-2">
-                        <h4 class="font-medium text-gray-900 text-sm md:text-base">${notification.title}</h4>
-                        ${!notification.is_read ? '<span class="w-2 h-2 bg-blue-500 rounded-full"></span>' : ''}
-                    </div>
-                    <p class="text-xs md:text-sm text-gray-600 mt-1">${notification.message}</p>
-                    <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_date).toLocaleString(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US')}</p>
-                </div>
-                <div class="w-3 h-3 rounded-full ml-3 ${getNotificationTypeColor(notification.type)}"></div>
-            </div>
-        </div>
-    `).join('');
-    document.getElementById('notifications-modal').classList.remove('hidden');
     toggleMobileMenu(false);
 }
 
 function closeNotificationsModal() {
-    document.getElementById('notifications-modal').classList.add('hidden');
+    const notificationsModal = document.getElementById('notifications-modal');
+    if (notificationsModal) {
+        notificationsModal.classList.add('hidden');
+    }
 }
 
 function showPaymentsModal() {
     renderPayments();
-    document.getElementById('payments-modal').classList.remove('hidden');
+    const paymentsModal = document.getElementById('payments-modal');
+    if (paymentsModal) {
+        paymentsModal.classList.remove('hidden');
+    }
     toggleMobileMenu(false);
 }
 
 function closePaymentsModal() {
-    document.getElementById('payments-modal').classList.add('hidden');
+    const paymentsModal = document.getElementById('payments-modal');
+    if (paymentsModal) {
+        paymentsModal.classList.add('hidden');
+    }
 }
 
 function filterPayments(filter) {
     paymentFilter = filter;
-    document.getElementById('filter-all').className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
-    document.getElementById('filter-completed').className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'completed' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
-    document.getElementById('filter-pending').className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'pending' ? 'bg-yellow-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
+    const filterAll = document.getElementById('filter-all');
+    const filterCompleted = document.getElementById('filter-completed');
+    const filterPending = document.getElementById('filter-pending');
+    if (filterAll && filterCompleted && filterPending) {
+        filterAll.className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
+        filterCompleted.className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'completed' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
+        filterPending.className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'pending' ? 'bg-yellow-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
+    }
     renderPayments();
 }
 
 function renderPayments() {
-    const filteredPayments = paymentFilter === 'all' ? payments : payments.filter(p => p.status === paymentFilter);
-    document.getElementById('filter-all').textContent = `${translations[currentLanguage].all} (${payments.length})`;
-    document.getElementById('filter-completed').textContent = `${translations[currentLanguage].completed} (${payments.filter(p => p.status === 'completed').length})`;
-    document.getElementById('filter-pending').textContent = `${translations[currentLanguage].pending} (${payments.filter(p => p.status === 'pending').length})`;
-    document.getElementById('payments-list').innerHTML = filteredPayments.length === 0 ? `
-        <tr>
-            <td colspan="6" class="text-center py-8 text-gray-500 text-xs md:text-sm">${translations[currentLanguage].no_payments}</td>
-        </tr>
-    ` : filteredPayments.map(payment => `
-        <tr class="border-b border-gray-100 hover:bg-gray-50">
-            <td class="py-2 md:py-3 px-2 text-xs md:text-sm">${formatPaymentDate(payment.payment_date)}</td>
-            <td class="py-2 md:py-3 px-2 font-semibold text-xs md:text-sm">${formatCurrency(payment.amount)}</td>
-            <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600">${getPaymentMethodLabel(payment.payment_method)}</td>
-            <td class="py-2 md:py-3 px-2 text-xs md:text-sm">${payment.description}</td>
-            <td class="py-2 md:py-3 px-2">
-                <span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(payment.status)}">
-                    ${getStatusLabel(payment.status)}
-                </span>
-            </td>
-            <td class="py-2 md:py-3 px-2 text-xs text-gray-500 font-mono">${payment.transaction_id}</td>
-        </tr>
-    `).join('');
+    const paymentsList = document.getElementById('payments-list');
+    if (paymentsList) {
+        const filteredPayments = paymentFilter === 'all' ? payments : payments.filter(p => p.status === paymentFilter);
+        const filterAll = document.getElementById('filter-all');
+        const filterCompleted = document.getElementById('filter-completed');
+        const filterPending = document.getElementById('filter-pending');
+        if (filterAll && filterCompleted && filterPending) {
+            filterAll.textContent = `${translations[currentLanguage].all} (${payments.length})`;
+            filterCompleted.textContent = `${translations[currentLanguage].completed} (${payments.filter(p => p.status === 'completed').length})`;
+            filterPending.textContent = `${translations[currentLanguage].pending} (${payments.filter(p => p.status === 'pending').length})`;
+            paymentsList.innerHTML = filteredPayments.length === 0 ? `
+                <tr>
+                    <td colspan="6" class="text-center py-8 text-gray-500 text-xs md:text-sm">${translations[currentLanguage].no_payments}</td>
+                </tr>
+            ` : filteredPayments.map(payment => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-2 md:py-3 px-2 text-xs md:text-sm">${formatPaymentDate(payment.payment_date)}</td>
+                    <td class="py-2 md:py-3 px-2 font-semibold text-xs md:text-sm">${formatCurrency(payment.amount)}</td>
+                    <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600">${getPaymentMethodLabel(payment.payment_method)}</td>
+                    <td class="py-2 md:py-3 px-2 text-xs md:text-sm">${payment.description}</td>
+                    <td class="py-2 md:py-3 px-2">
+                        <span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(payment.status)}">
+                            ${getStatusLabel(payment.status)}
+                        </span>
+                    </td>
+                    <td class="py-2 md:py-3 px-2 text-xs text-gray-500 font-mono">${payment.transaction_id}</td>
+                </tr>
+            `).join('');
+        }
+    }
 }
 
 function markNotificationRead(notificationId) {
@@ -585,20 +686,22 @@ function changeTariff(tariffId) {
 function toggleMobileMenu(force) {
     const mobileMenu = document.getElementById('mobile-menu');
     const burgerIcon = document.getElementById('burger-menu').querySelector('svg');
-    if (force === undefined) {
-        mobileMenu.classList.toggle('hidden');
-    } else {
-        mobileMenu.classList.toggle('hidden', !force);
-    }
-    if (!mobileMenu.classList.contains('hidden')) {
-        burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
-    } else {
-        burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+    if (mobileMenu && burgerIcon) {
+        if (force === undefined) {
+            mobileMenu.classList.toggle('hidden');
+        } else {
+            mobileMenu.classList.toggle('hidden', !force);
+        }
+        if (!mobileMenu.classList.contains('hidden')) {
+            burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+        } else {
+            burgerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+        }
     }
 }
 
 // Event listeners
-document.getElementById('burger-menu').addEventListener('click', () => toggleMobileMenu());
-
-// Initialize
-loadData();
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('burger-menu').addEventListener('click', () => toggleMobileMenu());
+    loadData();
+});
