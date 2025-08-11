@@ -7,6 +7,10 @@ const subscriberData = {
         middle_name: 'Иванович',
         login: 'ivanov_123',
         address: 'г. Москва, ул. Ленина, д. 10, кв. 5',
+        contract_number: '19061234',
+        phone_number_1: '+998 90 123 45 67',
+        phone_number_2: '+998 90 987 65 43',
+        password: 'current_password', // For demo purposes
         balance: 1500,
         tariff_id: 1,
         tariff_change_date: '2025-07-01T00:00:00Z'
@@ -42,21 +46,210 @@ const paymentStats = {
     total_amount: 1000
 };
 
+const services = [
+    { name: 'Роутер', status: 'Активна' },
+    { name: 'Allplay', status: 'Активна' }
+];
+
+const discount = { name: 'Скидка', value: '15%' };
+
+const documents = [
+    { name: 'Договор', url: '#', type: 'pdf' },
+    { name: 'Квитанция об оплате', url: '#', type: 'pdf' }
+];
+
+const translations = {
+    ru: {
+        loading: 'Загрузка...',
+        dashboard: 'Личный кабинет',
+        change_tariff: 'Смена тарифа',
+        payment_history: 'История платежей',
+        notifications: 'Оповещения',
+        change_password: 'Сменить пароль',
+        logout: 'Выход',
+        current_tariff: 'Текущий тариф',
+        tariff_change_date_label: 'Дата смены тарифа: ',
+        tariff_shortage_label: 'Для оплаты тарифа не хватает: ',
+        per_month: 'в месяц',
+        current_balance: 'Текущий баланс',
+        days_left: 'До окончания тарифа',
+        recent_notifications: 'Последние уведомления',
+        all_notifications: 'Все уведомления',
+        tariff_info: 'Информация о тарифе',
+        edit_phones: 'Редактировать номера телефонов',
+        change_password: 'Сменить пароль',
+        current_password: 'Текущий пароль',
+        new_password: 'Новый пароль',
+        confirm_password: 'Подтверждение пароля',
+        contract_number_label: 'Номер договора: ',
+        phone_number_1_label: 'Телефон 1: ',
+        phone_number_2_label: 'Телефон 2: ',
+        edit: 'Редактировать',
+        save: 'Сохранить',
+        cancel: 'Отмена',
+        services: 'Услуги',
+        documents: 'Документы',
+        discount: 'Скидка',
+        phone_numbers: 'Номера телефонов',
+        date: 'Дата',
+        amount: 'Сумма',
+        payment_method: 'Способ оплаты',
+        description: 'Описание',
+        status: 'Статус',
+        transaction_id: 'ID операции',
+        all: 'Все',
+        completed: 'Выполненные',
+        pending: 'В обработке',
+        login_label: 'Логин',
+        address_label: 'Адрес',
+        status_label: 'Статус',
+        discount_label: 'Скидка',
+        type_label: 'Тип',
+        speed_label: 'Скорость',
+        current_label: 'Текущий',
+        tariff_changed: 'Тариф успешно изменен!',
+        password_changed: 'Пароль успешно изменен!',
+        password_mismatch: 'Новый пароль и подтверждение не совпадают',
+        invalid_current_password: 'Неверный текущий пароль',
+        no_notifications: 'Нет уведомлений',
+        no_payments: 'Нет платежей в выбранной категории'
+    },
+    uz: {
+        loading: 'Yuklanmoqda...',
+        dashboard: 'Shaxsiy kabinet',
+        change_tariff: 'Tarifni o‘zgartirish',
+        payment_history: 'To‘lovlar tarixi',
+        notifications: 'Bildirishnomalar',
+        change_password: 'Parolni o‘zgartirish',
+        logout: 'Chiqish',
+        current_tariff: 'Joriy tarif',
+        tariff_change_date_label: 'Tarif o‘zgartirilgan sana: ',
+        tariff_shortage_label: 'Tarifni to‘lash uchun yetishmaydi: ',
+        per_month: 'oyiga',
+        current_balance: 'Joriy balans',
+        days_left: 'Tarif tugashiga',
+        recent_notifications: 'Oxirgi bildirishnomalar',
+        all_notifications: 'Barcha bildirishnomalar',
+        tariff_info: 'Tarif haqida ma’lumot',
+        edit_phones: 'Telefon raqamlarini tahrirlash',
+        change_password: 'Parolni o‘zgartirish',
+        current_password: 'Joriy parol',
+        new_password: 'Yangi parol',
+        confirm_password: 'Parolni tasdiqlash',
+        contract_number_label: 'Shartnoma raqami: ',
+        phone_number_1_label: 'Telefon 1: ',
+        phone_number_2_label: 'Telefon 2: ',
+        edit: 'Tahrirlash',
+        save: 'Saqlash',
+        cancel: 'Bekor qilish',
+        services: 'Xizmatlar',
+        documents: 'Hujjatlar',
+        discount: 'Chegirma',
+        phone_numbers: 'Telefon raqamlari',
+        date: 'Sana',
+        amount: 'Miqdor',
+        payment_method: 'To‘lov usuli',
+        description: 'Tavsif',
+        status: 'Holati',
+        transaction_id: 'Operatsiya ID',
+        all: 'Barcha',
+        completed: 'Bajarildi',
+        pending: 'Jarayonda',
+        login_label: 'Login',
+        address_label: 'Manzil',
+        status_label: 'Holati',
+        discount_label: 'Chegirma',
+        type_label: 'Turi',
+        speed_label: 'Tezlik',
+        current_label: 'Joriy',
+        tariff_changed: 'Tarif muvaffaqiyatli o‘zgartirildi!',
+        password_changed: 'Parol muvaffaqiyatli o‘zgartirildi!',
+        password_mismatch: 'Yangi parol va tasdiqlash mos kelmaydi',
+        invalid_current_password: 'Noto‘g‘ri joriy parol',
+        no_notifications: 'Bildirishnomalar yo‘q',
+        no_payments: 'Tanlangan toifada to‘lovlar yo‘q'
+    },
+    en: {
+        loading: 'Loading...',
+        dashboard: 'Dashboard',
+        change_tariff: 'Change Tariff',
+        payment_history: 'Payment History',
+        notifications: 'Notifications',
+        change_password: 'Change Password',
+        logout: 'Logout',
+        current_tariff: 'Current Tariff',
+        tariff_change_date_label: 'Tariff Change Date: ',
+        tariff_shortage_label: 'Amount Needed for Tariff Payment: ',
+        per_month: 'per month',
+        current_balance: 'Current Balance',
+        days_left: 'Until Tariff Expires',
+        recent_notifications: 'Recent Notifications',
+        all_notifications: 'All Notifications',
+        tariff_info: 'Tariff Information',
+        edit_phones: 'Edit Phone Numbers',
+        change_password: 'Change Password',
+        current_password: 'Current Password',
+        new_password: 'New Password',
+        confirm_password: 'Confirm Password',
+        contract_number_label: 'Contract Number: ',
+        phone_number_1_label: 'Phone 1: ',
+        phone_number_2_label: 'Phone 2: ',
+        edit: 'Edit',
+        save: 'Save',
+        cancel: 'Cancel',
+        services: 'Services',
+        documents: 'Documents',
+        discount: 'Discount',
+        phone_numbers: 'Phone Numbers',
+        date: 'Date',
+        amount: 'Amount',
+        payment_method: 'Payment Method',
+        description: 'Description',
+        status: 'Status',
+        transaction_id: 'Transaction ID',
+        all: 'All',
+        completed: 'Completed',
+        pending: 'Pending',
+        login_label: 'Login',
+        address_label: 'Address',
+        status_label: 'Status',
+        discount_label: 'Discount',
+        type_label: 'Type',
+        speed_label: 'Speed',
+        current_label: 'Current',
+        tariff_changed: 'Tariff successfully changed!',
+        password_changed: 'Password successfully changed!',
+        password_mismatch: 'New password and confirmation do not match',
+        invalid_current_password: 'Incorrect current password',
+        no_notifications: 'No notifications',
+        no_payments: 'No payments in the selected category'
+    }
+};
+
 let paymentFilter = 'all';
 let selectedTariff = null;
+let currentLanguage = 'ru';
 
 // Utility functions
 function formatCurrency(amount) {
-    return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB' }).format(amount);
+    const currency = currentLanguage === 'uz' ? 'UZS' : 'RUB';
+    return new Intl.NumberFormat(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US', {
+        style: 'currency',
+        currency: currency
+    }).format(amount);
 }
 
 function formatDate(dateStr) {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    return date.toLocaleDateString(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
 }
 
 function formatPaymentDate(dateStr) {
-    return new Date(dateStr).toLocaleDateString('ru-RU', {
+    return new Date(dateStr).toLocaleDateString(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -66,12 +259,12 @@ function formatPaymentDate(dateStr) {
 }
 
 function getPaymentMethodLabel(method) {
-    switch (method) {
-        case 'card': return 'Банковская карта';
-        case 'bank_transfer': return 'Банковский перевод';
-        case 'cash': return 'Наличные';
-        default: return method;
-    }
+    const labels = {
+        ru: { card: 'Банковская карта', bank_transfer: 'Банковский перевод', cash: 'Наличные' },
+        uz: { card: 'Bank kartasi', bank_transfer: 'Bank o‘tkazmasi', cash: 'Naqd pul' },
+        en: { card: 'Credit Card', bank_transfer: 'Bank Transfer', cash: 'Cash' }
+    };
+    return labels[currentLanguage][method] || method;
 }
 
 function getStatusColor(status) {
@@ -84,12 +277,12 @@ function getStatusColor(status) {
 }
 
 function getStatusLabel(status) {
-    switch (status) {
-        case 'completed': return 'Выполнен';
-        case 'pending': return 'В обработке';
-        case 'failed': return 'Отклонен';
-        default: return status;
-    }
+    const labels = {
+        ru: { completed: 'Выполнен', pending: 'В обработке', failed: 'Отклонен' },
+        uz: { completed: 'Bajarildi', pending: 'Jarayonda', failed: 'Rad etildi' },
+        en: { completed: 'Completed', pending: 'Pending', failed: 'Failed' }
+    };
+    return labels[currentLanguage][status] || status;
 }
 
 function getNotificationTypeColor(type) {
@@ -100,6 +293,30 @@ function getNotificationTypeColor(type) {
     }
 }
 
+function getServiceStatusLabel(status) {
+    const labels = {
+        ru: { active: 'Активна' },
+        uz: { active: 'Faol' },
+        en: { active: 'Active' }
+    };
+    return labels[currentLanguage][status.toLowerCase()] || status;
+}
+
+// Language change function
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (element.tagName === 'BUTTON' || element.tagName === 'H3' || element.tagName === 'H4' || element.tagName === 'LABEL') {
+            element.textContent = translations[lang][key];
+        } else {
+            const prefix = element.textContent.split(': ')[0];
+            element.textContent = `${translations[lang][key]}${element.id.includes('tariff-shortage') ? formatCurrency(Math.max(0, subscriberData.tariff.price - subscriberData.subscriber.balance)) : element.id.includes('tariff-change-date') ? formatDate(subscriberData.subscriber.tariff_change_date) : element.id.includes('contract-number') ? subscriberData.subscriber.contract_number : element.id.includes('phone-number-1') ? subscriberData.subscriber.phone_number_1 : element.id.includes('phone-number-2') ? subscriberData.subscriber.phone_number_2 : ''}`;
+        }
+    });
+    loadData(); // Refresh UI with new language
+}
+
 // Load data
 function loadData() {
     setTimeout(() => {
@@ -108,14 +325,18 @@ function loadData() {
 
         // Populate subscriber data
         document.getElementById('user-name').textContent = `${subscriberData.subscriber.last_name} ${subscriberData.subscriber.first_name} ${subscriberData.subscriber.middle_name}`;
-        document.getElementById('user-login').textContent = `Логин: ${subscriberData.subscriber.login}`;
-        document.getElementById('user-address').textContent = `Адрес: ${subscriberData.subscriber.address}`;
+        document.getElementById('user-login').textContent = `${translations[currentLanguage].login_label}: ${subscriberData.subscriber.login}`;
+        document.getElementById('user-address').textContent = `${translations[currentLanguage].address_label}: ${subscriberData.subscriber.address}`;
+        document.getElementById('contract-number').textContent = `${translations[currentLanguage].contract_number_label}: ${subscriberData.subscriber.contract_number}`;
+        document.getElementById('phone-number-1').textContent = `${translations[currentLanguage].phone_number_1_label}: ${subscriberData.subscriber.phone_number_1}`;
+        document.getElementById('phone-number-2').textContent = `${translations[currentLanguage].phone_number_2_label}: ${subscriberData.subscriber.phone_number_2 || ''}`;
         document.getElementById('tariff-name').textContent = subscriberData.tariff.name;
         document.getElementById('tariff-price').textContent = formatCurrency(subscriberData.tariff.price);
-        document.getElementById('tariff-change-date').textContent = `Дата смены тарифа: ${formatDate(subscriberData.subscriber.tariff_change_date)}`;
+        document.getElementById('tariff-change-date').textContent = `${translations[currentLanguage].tariff_change_date_label}: ${formatDate(subscriberData.subscriber.tariff_change_date)}`;
         document.getElementById('balance').textContent = formatCurrency(subscriberData.subscriber.balance);
         document.getElementById('balance').className = `text-xl md:text-2xl font-bold ${subscriberData.subscriber.balance >= 0 ? 'text-green-600' : 'text-red-600'}`;
         document.getElementById('days-left').textContent = '30 дней'; // Static for demo
+        document.getElementById('tariff-shortage').textContent = `${translations[currentLanguage].tariff_shortage_label}: ${formatCurrency(Math.max(0, subscriberData.tariff.price - subscriberData.subscriber.balance))}`;
 
         // Populate notifications
         const unreadCount = notifications.filter(n => !n.is_read).length;
@@ -138,7 +359,7 @@ function loadData() {
                             ${!notification.is_read ? '<span class="w-2 h-2 bg-blue-500 rounded-full"></span>' : ''}
                         </div>
                         <p class="text-xs md:text-sm text-gray-600 mt-1">${notification.message}</p>
-                        <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_date).toLocaleString('ru-RU')}</p>
+                        <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_date).toLocaleString(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US')}</p>
                     </div>
                     <div class="w-3 h-3 rounded-full ml-3 ${getNotificationTypeColor(notification.type)}"></div>
                 </div>
@@ -147,10 +368,33 @@ function loadData() {
 
         // Populate payment stats
         document.getElementById('payment-stats').innerHTML = `
-            <span>Всего платежей: <strong>${paymentStats.total_payments}</strong></span>
-            <span>Выполнено: <strong>${paymentStats.completed_payments}</strong></span>
-            <span>Общая сумма: <strong>${formatCurrency(paymentStats.total_amount)}</strong></span>
+            <span>${translations[currentLanguage].total_payments_label || 'Всего платежей'}: <strong>${paymentStats.total_payments}</strong></span>
+            <span>${translations[currentLanguage].completed_payments_label || 'Выполнено'}: <strong>${paymentStats.completed_payments}</strong></span>
+            <span>${translations[currentLanguage].total_amount_label || 'Общая сумма'}: <strong>${formatCurrency(paymentStats.total_amount)}</strong></span>
         `;
+
+        // Populate services
+        document.getElementById('services-list').innerHTML = `
+            <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
+                <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[0].name}</h4>
+                <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[0].status)}</p>
+            </div>
+            <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
+                <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[1].name}</h4>
+                <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[1].status)}</p>
+            </div>
+        `;
+
+        // Populate discount
+        document.getElementById('discount-display').textContent = discount.value;
+
+        // Populate documents
+        document.getElementById('documents-list').innerHTML = documents.map(doc => `
+            <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
+                <a href="${doc.url}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm md:text-base">${doc.name}</a>
+                <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].type_label}: ${doc.type.toUpperCase()}</p>
+            </div>
+        `).join('');
 
         // Initial payments load
         renderPayments();
@@ -163,9 +407,9 @@ function showTariffModal() {
     document.getElementById('tariff-details').innerHTML = `
         <h4 class="font-semibold text-gray-900 text-base md:text-lg">${selectedTariff.name}</h4>
         <p class="text-gray-600 text-xs md:text-sm mt-2">${selectedTariff.description}</p>
-        <p class="text-gray-600 text-xs md:text-sm mt-1">Скорость: ${selectedTariff.speed}</p>
+        <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${selectedTariff.speed}</p>
         <p class="font-bold text-base md:text-lg mt-2">${formatCurrency(selectedTariff.price)}</p>
-        <p class="text-xs md:text-sm text-gray-600">в месяц</p>
+        <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
     `;
     document.getElementById('tariff-modal').classList.remove('hidden');
 }
@@ -181,29 +425,79 @@ function showChangeTariffModal() {
                 <div class="flex-1">
                     <h4 class="font-semibold text-gray-900 text-sm md:text-base flex items-center">
                         ${tariff.name}
-                        ${subscriberData.subscriber.tariff_id === tariff.id ? '<span class="ml-2 bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">Текущий</span>' : ''}
+                        ${subscriberData.subscriber.tariff_id === tariff.id ? `<span class="ml-2 bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">${translations[currentLanguage].current_label}</span>` : ''}
                     </h4>
                     <p class="text-gray-600 text-xs md:text-sm">${tariff.description}</p>
-                    <p class="text-gray-600 text-xs md:text-sm mt-1">Скорость: ${tariff.speed}</p>
+                    <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${tariff.speed}</p>
                 </div>
                 <div class="text-right">
                     <p class="font-bold text-base md:text-lg">${formatCurrency(tariff.price)}</p>
-                    <p class="text-xs md:text-sm text-gray-600">в месяц</p>
+                    <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
                 </div>
             </div>
         </div>
     `).join('');
     document.getElementById('change-tariff-modal').classList.remove('hidden');
-    document.getElementById('tariff-modal').classList.add('hidden'); // Close tariff modal when opening change tariff modal
-    toggleMobileMenu(false); // Close mobile menu when opening modal
+    document.getElementById('tariff-modal').classList.add('hidden');
+    toggleMobileMenu(false);
 }
 
 function closeChangeTariffModal() {
     document.getElementById('change-tariff-modal').classList.add('hidden');
 }
 
+function showEditPhonesModal() {
+    document.getElementById('edit-phone-1').value = subscriberData.subscriber.phone_number_1 || '';
+    document.getElementById('edit-phone-2').value = subscriberData.subscriber.phone_number_2 || '';
+    document.getElementById('edit-phones-modal').classList.remove('hidden');
+    toggleMobileMenu(false);
+}
+
+function closeEditPhonesModal() {
+    document.getElementById('edit-phones-modal').classList.add('hidden');
+}
+
+function savePhoneNumbers() {
+    subscriberData.subscriber.phone_number_1 = document.getElementById('edit-phone-1').value;
+    subscriberData.subscriber.phone_number_2 = document.getElementById('edit-phone-2').value;
+    closeEditPhonesModal();
+    loadData();
+}
+
+function showChangePasswordModal() {
+    document.getElementById('current-password').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+    document.getElementById('change-password-modal').classList.remove('hidden');
+    toggleMobileMenu(false);
+}
+
+function closeChangePasswordModal() {
+    document.getElementById('change-password-modal').classList.add('hidden');
+}
+
+function savePassword() {
+    const currentPassword = document.getElementById('current-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if (currentPassword !== subscriberData.subscriber.password) {
+        alert(translations[currentLanguage].invalid_current_password);
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        alert(translations[currentLanguage].password_mismatch);
+        return;
+    }
+
+    subscriberData.subscriber.password = newPassword;
+    closeChangePasswordModal();
+    alert(translations[currentLanguage].password_changed);
+}
+
 function showNotificationsModal() {
-    document.getElementById('all-notifications-list').innerHTML = notifications.length === 0 ? '<p class="text-gray-500 text-center py-8 text-sm">Нет уведомлений</p>' : notifications.map(notification => `
+    document.getElementById('all-notifications-list').innerHTML = notifications.length === 0 ? `<p class="text-gray-500 text-center py-8 text-sm">${translations[currentLanguage].no_notifications}</p>` : notifications.map(notification => `
         <div class="notification-item p-3 md:p-4 rounded-lg border cursor-pointer transition-colors ${!notification.is_read ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}" onclick="markNotificationRead(${notification.id})">
             <div class="flex justify-between items-start">
                 <div class="flex-1">
@@ -212,14 +506,14 @@ function showNotificationsModal() {
                         ${!notification.is_read ? '<span class="w-2 h-2 bg-blue-500 rounded-full"></span>' : ''}
                     </div>
                     <p class="text-xs md:text-sm text-gray-600 mt-1">${notification.message}</p>
-                    <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_date).toLocaleString('ru-RU')}</p>
+                    <p class="text-xs text-gray-500 mt-2">${new Date(notification.created_date).toLocaleString(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US')}</p>
                 </div>
                 <div class="w-3 h-3 rounded-full ml-3 ${getNotificationTypeColor(notification.type)}"></div>
             </div>
         </div>
     `).join('');
     document.getElementById('notifications-modal').classList.remove('hidden');
-    toggleMobileMenu(false); // Close mobile menu when opening modal
+    toggleMobileMenu(false);
 }
 
 function closeNotificationsModal() {
@@ -229,7 +523,7 @@ function closeNotificationsModal() {
 function showPaymentsModal() {
     renderPayments();
     document.getElementById('payments-modal').classList.remove('hidden');
-    toggleMobileMenu(false); // Close mobile menu when opening modal
+    toggleMobileMenu(false);
 }
 
 function closePaymentsModal() {
@@ -246,12 +540,12 @@ function filterPayments(filter) {
 
 function renderPayments() {
     const filteredPayments = paymentFilter === 'all' ? payments : payments.filter(p => p.status === paymentFilter);
-    document.getElementById('filter-all').textContent = `Все (${payments.length})`;
-    document.getElementById('filter-completed').textContent = `Выполненные (${payments.filter(p => p.status === 'completed').length})`;
-    document.getElementById('filter-pending').textContent = `В обработке (${payments.filter(p => p.status === 'pending').length})`;
+    document.getElementById('filter-all').textContent = `${translations[currentLanguage].all} (${payments.length})`;
+    document.getElementById('filter-completed').textContent = `${translations[currentLanguage].completed} (${payments.filter(p => p.status === 'completed').length})`;
+    document.getElementById('filter-pending').textContent = `${translations[currentLanguage].pending} (${payments.filter(p => p.status === 'pending').length})`;
     document.getElementById('payments-list').innerHTML = filteredPayments.length === 0 ? `
         <tr>
-            <td colspan="6" class="text-center py-8 text-gray-500 text-xs md:text-sm">Нет платежей в выбранной категории</td>
+            <td colspan="6" class="text-center py-8 text-gray-500 text-xs md:text-sm">${translations[currentLanguage].no_payments}</td>
         </tr>
     ` : filteredPayments.map(payment => `
         <tr class="border-b border-gray-100 hover:bg-gray-50">
@@ -283,7 +577,7 @@ function changeTariff(tariffId) {
         subscriberData.tariff = tariffs.find(t => t.id === tariffId);
         subscriberData.subscriber.tariff_change_date = new Date().toISOString();
         closeChangeTariffModal();
-        alert('Тариф успешно изменен!');
+        alert(translations[currentLanguage].tariff_changed);
         loadData();
     }
 }
