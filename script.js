@@ -1,3 +1,5 @@
+let currentLanguage = 'ru';
+
 // Simulated data (replacing API calls)
 const subscriberData = {
     subscriber: {
@@ -10,7 +12,7 @@ const subscriberData = {
         contract_number: '19061234',
         phone_number_1: '+998 90 123 45 67',
         phone_number_2: '+998 90 987 65 43',
-        password: 'current_password', // For demo purposes
+        password: 'current_password',
         balance: 1500,
         tariff_id: 1,
         tariff_change_date: '2025-07-01T00:00:00Z'
@@ -228,11 +230,10 @@ const translations = {
 
 let paymentFilter = 'all';
 let selectedTariff = null;
-let currentLanguage = 'ru';
 
 // Utility functions
 function formatCurrency(amount) {
-    const currency = 'UZS'; // Установим UZS как фиксированную валюту для всех языков
+    const currency = 'UZS';
     return new Intl.NumberFormat(currentLanguage === 'ru' ? 'ru-RU' : currentLanguage === 'uz' ? 'uz-UZ' : 'en-US', {
         style: 'currency',
         currency: currency
@@ -314,8 +315,187 @@ function changeLanguage(lang) {
             element.textContent = `${translations[lang][key]}${element.id.includes('tariff-shortage') ? formatCurrency(Math.max(0, subscriberData.tariff.price - subscriberData.subscriber.balance)) : element.id.includes('tariff-change-date') ? formatDate(subscriberData.subscriber.tariff_change_date) : element.id.includes('contract-number') ? subscriberData.subscriber.contract_number : element.id.includes('phone-number-1') ? subscriberData.subscriber.phone_number_1 : element.id.includes('phone-number-2') ? subscriberData.subscriber.phone_number_2 : ''}`;
         }
     });
-    loadData(); // Refresh UI with new language
+    // Обновление цвета стрелки в тёмной теме
+    const langDropdown = document.querySelector('.lang-dropdown svg');
+    if (langDropdown) {
+        langDropdown.classList.add('dark:text-white');
+    }
+    loadData();
 }
+
+// Theme toggle function
+function toggleTheme() {
+    const body = document.getElementById('body');
+    const themeIcon = document.getElementById('theme-icon');
+    const mobileThemeIcon = document.getElementById('mobile-theme-icon');
+    const isDark = body.classList.contains('dark');
+    
+    if (isDark) {
+        body.classList.remove('dark');
+        body.classList.remove('bg-gray-900');
+        body.classList.add('bg-gradient-to-br', 'from-blue-50', 'to-indigo-100');
+        themeIcon.innerHTML = '<path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />';
+        mobileThemeIcon.innerHTML = '<path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />';
+        document.querySelectorAll('.bg-gray-800').forEach(el => {
+            el.classList.remove('bg-gray-800');
+            el.classList.add('bg-white');
+        });
+        document.querySelectorAll('.text-gray-100').forEach(el => {
+            el.classList.remove('text-gray-100');
+            el.classList.add('text-gray-900');
+        });
+        document.querySelectorAll('.text-gray-400').forEach(el => {
+            el.classList.remove('text-gray-400');
+            el.classList.add('text-gray-600');
+        });
+        document.querySelectorAll('.border-gray-700').forEach(el => {
+            el.classList.remove('border-gray-700');
+            el.classList.add('border-gray-200');
+        });
+        document.querySelectorAll('.bg-gray-700').forEach(el => {
+            el.classList.remove('bg-gray-700');
+            el.classList.add('bg-gray-50');
+        });
+        document.querySelectorAll('.bg-indigo-900').forEach(el => {
+            el.classList.remove('bg-indigo-900');
+            el.classList.add('bg-indigo-100');
+        });
+        document.querySelectorAll('.text-indigo-200').forEach(el => {
+            el.classList.remove('text-indigo-200');
+            el.classList.add('text-indigo-800');
+        });
+        document.querySelectorAll('.bg-blue-900').forEach(el => {
+            el.classList.remove('bg-blue-900');
+            el.classList.add('bg-blue-50');
+        });
+        document.querySelectorAll('.border-blue-700').forEach(el => {
+            el.classList.remove('border-blue-700');
+            el.classList.add('border-blue-200');
+        });
+        document.querySelectorAll('.bg-green-900').forEach(el => {
+            el.classList.remove('bg-green-900');
+            el.classList.add('bg-green-100');
+        });
+        document.querySelectorAll('.text-green-300').forEach(el => {
+            el.classList.remove('text-green-300');
+            el.classList.add('text-green-600');
+        });
+        document.querySelectorAll('.bg-yellow-900').forEach(el => {
+            el.classList.remove('bg-yellow-900');
+            el.classList.add('bg-yellow-100');
+        });
+        document.querySelectorAll('.text-yellow-300').forEach(el => {
+            el.classList.remove('text-yellow-300');
+            el.classList.add('text-yellow-600');
+        });
+        document.querySelectorAll('.bg-red-900').forEach(el => {
+            el.classList.remove('bg-red-900');
+            el.classList.add('bg-red-100');
+        });
+        document.querySelectorAll('.text-red-300').forEach(el => {
+            el.classList.remove('text-red-300');
+            el.classList.add('text-red-600');
+        });
+        // Обработка текста футера для светлой темы
+        document.querySelectorAll('footer .text-gray-100').forEach(el => {
+            el.classList.remove('text-gray-100');
+            el.classList.add('text-indigo-800');
+        });
+        document.querySelectorAll('footer a').forEach(el => {
+            el.classList.remove('text-indigo-300');
+            el.classList.add('text-indigo-800');
+        });
+    } else {
+        body.classList.add('dark');
+        body.classList.remove('bg-gradient-to-br', 'from-blue-50', 'to-indigo-100');
+        body.classList.add('bg-gray-900');
+        themeIcon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />';
+        mobileThemeIcon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />';
+        document.querySelectorAll('.bg-white').forEach(el => {
+            el.classList.remove('bg-white');
+            el.classList.add('bg-gray-800');
+        });
+        document.querySelectorAll('.text-gray-900').forEach(el => {
+            el.classList.remove('text-gray-900');
+            el.classList.add('text-gray-100');
+        });
+        document.querySelectorAll('.text-gray-600').forEach(el => {
+            el.classList.remove('text-gray-600');
+            el.classList.add('text-gray-400');
+        });
+        document.querySelectorAll('.border-gray-200').forEach(el => {
+            el.classList.remove('border-gray-200');
+            el.classList.add('border-gray-700');
+        });
+        document.querySelectorAll('.bg-gray-50').forEach(el => {
+            el.classList.remove('bg-gray-50');
+            el.classList.add('bg-gray-700');
+        });
+        document.querySelectorAll('.bg-indigo-100').forEach(el => {
+            el.classList.remove('bg-indigo-100');
+            el.classList.add('bg-indigo-900');
+        });
+        document.querySelectorAll('.text-indigo-800').forEach(el => {
+            el.classList.remove('text-indigo-800');
+            el.classList.add('text-indigo-200');
+        });
+        document.querySelectorAll('.bg-blue-50').forEach(el => {
+            el.classList.remove('bg-blue-50');
+            el.classList.add('bg-blue-900');
+        });
+        document.querySelectorAll('.border-blue-200').forEach(el => {
+            el.classList.remove('border-blue-200');
+            el.classList.add('border-blue-700');
+        });
+        document.querySelectorAll('.bg-green-100').forEach(el => {
+            el.classList.remove('bg-green-100');
+            el.classList.add('bg-green-900');
+        });
+        document.querySelectorAll('.text-green-600').forEach(el => {
+            el.classList.remove('text-green-600');
+            el.classList.add('text-green-300');
+        });
+        document.querySelectorAll('.bg-yellow-100').forEach(el => {
+            el.classList.remove('bg-yellow-100');
+            el.classList.add('bg-yellow-900');
+        });
+        document.querySelectorAll('.text-yellow-600').forEach(el => {
+            el.classList.remove('text-yellow-600');
+            el.classList.add('text-yellow-300');
+        });
+        document.querySelectorAll('.bg-red-100').forEach(el => {
+            el.classList.remove('bg-red-100');
+            el.classList.add('bg-red-900');
+        });
+        document.querySelectorAll('.text-red-600').forEach(el => {
+            el.classList.remove('text-red-600');
+            el.classList.add('text-red-300');
+        });
+        // Обработка текста футера для тёмной темы
+        document.querySelectorAll('footer .text-indigo-800').forEach(el => {
+            el.classList.remove('text-indigo-800');
+            el.classList.add('text-indigo-200');
+        });
+        document.querySelectorAll('footer a').forEach(el => {
+            el.classList.remove('text-indigo-800');
+            el.classList.add('text-indigo-200');
+        });
+    }
+    
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        toggleTheme();
+    }
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+    document.getElementById('mobile-theme-toggle').addEventListener('click', toggleTheme);
+    document.getElementById('burger-menu').addEventListener('click', () => toggleMobileMenu());
+    loadData();
+});
 
 // Load data
 function loadData() {
@@ -323,7 +503,6 @@ function loadData() {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('app').classList.remove('hidden');
 
-        // Populate subscriber data
         document.getElementById('user-name').textContent = `${subscriberData.subscriber.last_name} ${subscriberData.subscriber.first_name} ${subscriberData.subscriber.middle_name}`;
         document.getElementById('user-login').textContent = `${translations[currentLanguage].login_label}: ${subscriberData.subscriber.login}`;
         document.getElementById('user-address').textContent = `${translations[currentLanguage].address_label}: ${subscriberData.subscriber.address}`;
@@ -335,18 +514,19 @@ function loadData() {
         document.getElementById('tariff-change-date').textContent = `${translations[currentLanguage].tariff_change_date_label}: ${formatDate(subscriberData.subscriber.tariff_change_date)}`;
         document.getElementById('balance').textContent = formatCurrency(subscriberData.subscriber.balance);
         document.getElementById('balance').className = `text-xl md:text-2xl font-bold ${subscriberData.subscriber.balance >= 0 ? 'text-green-600' : 'text-red-600'}`;
-        document.getElementById('days-left').textContent = '30 дней'; // Static for demo
+        document.getElementById('days-left').textContent = '30 дней';
         document.getElementById('tariff-shortage').textContent = `${translations[currentLanguage].tariff_shortage_label}: ${formatCurrency(Math.max(0, subscriberData.tariff.price - subscriberData.subscriber.balance))}`;
 
-        // Populate notifications
         const unreadCount = notifications.filter(n => !n.is_read).length;
         const badge = document.getElementById('notification-badge');
         const mobileBadge = document.getElementById('mobile-notification-badge');
-        badge.textContent = unreadCount;
-        mobileBadge.textContent = unreadCount;
-        if (unreadCount === 0) {
-            badge.classList.add('hidden');
-            mobileBadge.classList.add('hidden');
+        if (badge && mobileBadge) {
+            badge.textContent = unreadCount;
+            mobileBadge.textContent = unreadCount;
+            if (unreadCount === 0) {
+                badge.classList.add('hidden');
+                mobileBadge.classList.add('hidden');
+            }
         }
 
         const notificationsList = document.getElementById('notifications-list');
@@ -368,7 +548,6 @@ function loadData() {
             `).join('');
         }
 
-        // Populate payment stats
         const paymentStatsElement = document.getElementById('payment-stats');
         if (paymentStatsElement) {
             paymentStatsElement.innerHTML = `
@@ -378,23 +557,17 @@ function loadData() {
             `;
         }
 
-        // Populate services
         const servicesList = document.getElementById('services-list');
         if (servicesList) {
-            servicesList.innerHTML = `
+            servicesList.innerHTML = services.map(service => `
                 <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
-                    <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[0].name}</h4>
-                    <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[0].status)}</p>
+                    <h4 class="font-medium text-gray-900 text-sm md:text-base">${service.name}</h4>
+                    <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(service.status)}</p>
                 </div>
-                <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
-                    <h4 class="font-medium text-gray-900 text-sm md:text-base">${services[1].name}</h4>
-                    <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].status_label}: ${getServiceStatusLabel(services[1].status)}</p>
-                </div>
-            `;
+            `).join('');
         }
 
-        // Populate discount
-        const discountValue = parseInt(discount.value); // Assuming '15%'
+        const discountValue = parseInt(discount.value);
         const maxDiscount = 15;
         const circumference = 251.2;
         const offset = circumference - (discountValue / maxDiscount) * circumference;
@@ -407,7 +580,6 @@ function loadData() {
             discountValueElement.textContent = `${discount.value}`;
         }
 
-        // Populate documents
         const documentsList = document.getElementById('documents-list');
         if (documentsList) {
             documentsList.innerHTML = documents.map(doc => `
@@ -418,9 +590,9 @@ function loadData() {
             `).join('');
         }
 
-        // Initial payments load
         renderPayments();
-    }, 1000); // Simulate loading
+        initializeInternetUsageChart();
+    }, 1000);
 }
 
 // Modal controls
@@ -429,10 +601,10 @@ function showTariffModal() {
     const tariffDetails = document.getElementById('tariff-details');
     if (tariffDetails) {
         tariffDetails.innerHTML = `
-            <h4 class="font-semibold text-gray-900 text-base md:text-lg">${selectedTariff.name}</h4>
+            <h4 class="font-semibold text-gray-900 dark:text-blue-200 text-base md:text-lg">${selectedTariff.name}</h4>
             <p class="text-gray-600 text-xs md:text-sm mt-2">${selectedTariff.description}</p>
             <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${selectedTariff.speed}</p>
-            <p class="font-bold text-base md:text-lg mt-2">${formatCurrency(selectedTariff.price)}</p>
+            <p class="font-bold text-base md:text-lg mt-2 text-gray-900 dark:text-green-300">${formatCurrency(selectedTariff.price)}</p>
             <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
         `;
     }
@@ -453,19 +625,19 @@ function showChangeTariffModal() {
     const tariffsList = document.getElementById('tariffs-list');
     if (tariffsList) {
         tariffsList.innerHTML = tariffs.map(tariff => `
-            <div class="tariff-card border rounded-lg p-3 md:p-4 cursor-pointer transition-colors ${subscriberData.subscriber.tariff_id === tariff.id ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-gray-300'}" onclick="changeTariff(${tariff.id})">
+            <div class="tariff-card border rounded-lg p-3 md:p-4 cursor-pointer transition-colors ${subscriberData.subscriber.tariff_id === tariff.id ? 'border-indigo-500 bg-indigo-50 dark:border-indigo-700 dark:bg-indigo-900' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}" onclick="changeTariff(${tariff.id})">
                 <div class="flex justify-between items-start">
                     <div class="flex-1">
-                        <h4 class="font-semibold text-gray-900 text-sm md:text-base flex items-center">
+                        <h4 class="font-semibold text-gray-900 dark:text-blue-200 text-sm md:text-base flex items-center">
                             ${tariff.name}
-                            ${subscriberData.subscriber.tariff_id === tariff.id ? `<span class="ml-2 bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">${translations[currentLanguage].current_label}</span>` : ''}
+                            ${subscriberData.subscriber.tariff_id === tariff.id ? `<span class="ml-2 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs px-2 py-1 rounded-full">${translations[currentLanguage].current_label}</span>` : ''}
                         </h4>
-                        <p class="text-gray-600 text-xs md:text-sm">${tariff.description}</p>
-                        <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${tariff.speed}</p>
+                        <p class="text-gray-600 dark:text-gray-300 text-xs md:text-sm">${tariff.description}</p>
+                        <p class="text-gray-600 dark:text-gray-300 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${tariff.speed}</p>
                     </div>
                     <div class="text-right">
-                        <p class="font-bold text-base md:text-lg">${formatCurrency(tariff.price)}</p>
-                        <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
+                        <p class="font-bold text-base md:text-lg text-gray-900 dark:text-green-300">${formatCurrency(tariff.price)}</p>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-300">${translations[currentLanguage].per_month}</p>
                     </div>
                 </div>
             </div>
@@ -500,6 +672,10 @@ function showEditPhonesModal() {
     if (editPhonesModal) {
         editPhonesModal.classList.remove('hidden');
     }
+    // Обновление текста меток в тёмной теме
+    document.querySelectorAll('#edit-phones-modal label').forEach(label => {
+        label.classList.add('dark:text-white');
+    });
     toggleMobileMenu(false);
 }
 
@@ -635,32 +811,24 @@ function renderPayments() {
     const paymentsList = document.getElementById('payments-list');
     if (paymentsList) {
         const filteredPayments = paymentFilter === 'all' ? payments : payments.filter(p => p.status === paymentFilter);
-        const filterAll = document.getElementById('filter-all');
-        const filterCompleted = document.getElementById('filter-completed');
-        const filterPending = document.getElementById('filter-pending');
-        if (filterAll && filterCompleted && filterPending) {
-            filterAll.textContent = `${translations[currentLanguage].all} (${payments.length})`;
-            filterCompleted.textContent = `${translations[currentLanguage].completed} (${payments.filter(p => p.status === 'completed').length})`;
-            filterPending.textContent = `${translations[currentLanguage].pending} (${payments.filter(p => p.status === 'pending').length})`;
-            paymentsList.innerHTML = filteredPayments.length === 0 ? `
-                <tr>
-                    <td colspan="6" class="text-center py-8 text-gray-500 text-xs md:text-sm">${translations[currentLanguage].no_payments}</td>
-                </tr>
-            ` : filteredPayments.map(payment => `
-                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="py-2 md:py-3 px-2 text-xs md:text-sm">${formatPaymentDate(payment.payment_date)}</td>
-                    <td class="py-2 md:py-3 px-2 font-semibold text-xs md:text-sm">${formatCurrency(payment.amount)}</td>
-                    <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600">${getPaymentMethodLabel(payment.payment_method)}</td>
-                    <td class="py-2 md:py-3 px-2 text-xs md:text-sm">${payment.description}</td>
-                    <td class="py-2 md:py-3 px-2">
-                        <span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(payment.status)}">
-                            ${getStatusLabel(payment.status)}
-                        </span>
-                    </td>
-                    <td class="py-2 md:py-3 px-2 text-xs text-gray-500 font-mono">${payment.transaction_id}</td>
-                </tr>
-            `).join('');
-        }
+        paymentsList.innerHTML = filteredPayments.length === 0 ? `
+            <tr>
+                <td colspan="6" class="text-center py-8 text-gray-500 dark:text-gray-300 text-xs md:text-sm">${translations[currentLanguage].no_payments}</td>
+            </tr>
+        ` : filteredPayments.map(payment => `
+            <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-900 dark:text-gray-100">${formatPaymentDate(payment.payment_date)}</td>
+                <td class="py-2 md:py-3 px-2 font-semibold text-xs md:text-sm text-gray-900 dark:text-gray-100">${formatCurrency(payment.amount)}</td>
+                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600 dark:text-gray-300">${getPaymentMethodLabel(payment.payment_method)}</td>
+                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600 dark:text-gray-300">${payment.description}</td>
+                <td class="py-2 md:py-3 px-2">
+                    <span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(payment.status)}">
+                        ${getStatusLabel(payment.status)}
+                    </span>
+                </td>
+                <td class="py-2 md:py-3 px-2 text-xs text-gray-500 dark:text-gray-300 font-mono">${payment.transaction_id}</td>
+            </tr>
+        `).join('');
     }
 }
 
@@ -700,8 +868,58 @@ function toggleMobileMenu(force) {
     }
 }
 
-// Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('burger-menu').addEventListener('click', () => toggleMobileMenu());
-    loadData();
-});
+// Initialize Internet Usage Chart
+function initializeInternetUsageChart() {
+    const ctx = document.getElementById('internetUsageChart').getContext('2d');
+    if (window.internetUsageChart instanceof Chart) {
+        window.internetUsageChart.destroy();
+    } else {
+        window.internetUsageChart = null; // Ensure it's initialized as null if not a Chart instance
+    }
+    window.internetUsageChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+            datasets: [
+                {
+                    label: 'Скачивание (MB)',
+                    data: Array.from({ length: 24 }, () => Math.floor(Math.random() * 100)),
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Отдача (MB)',
+                    data: Array.from({ length: 24 }, () => Math.floor(Math.random() * 50)),
+                    backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Время (часы)'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Объем (MB)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+}
