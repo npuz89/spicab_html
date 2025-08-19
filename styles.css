@@ -55,6 +55,7 @@
 
 .tariff-card:hover::before {
     left: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
 }
 
 .loading-spinner {
@@ -100,13 +101,12 @@
     padding-top: 6px;
 }
 
-
 .underline {
     font-weight: 600;
     text-decoration: underline;
 }
 
-.underline:hover{
+.underline:hover {
     transition: all 0.2s ease-in-out;
     text-decoration: none;
 }
@@ -133,10 +133,101 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* Logo styles */
+.header-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
 
+.header-logo:hover {
+    transform: scale(1.05);
+}
+
+/* Стили для модального окна платежей */
+#payments-modal .modal-content {
+    background-color: white;
+}
+
+.dark #payments-modal .modal-content {
+    background-color: #1f2937; /* bg-gray-800 */
+}
+
+#payments-modal .text-gray-700 {
+    color: #374151; /* Темно-серый для светлой темы */
+}
+
+.dark #payments-modal .text-gray-300 {
+    color: #d1d5db; /* Светло-серый для темной темы */
+}
+
+#payments-modal table {
+    width: 100%;
+}
+
+#payments-modal th, #payments-modal td {
+    padding: 0.5rem 0.75rem;
+}
+
+/* Стили для модального окна смены тарифа */
+#change-tariff-modal .modal-content {
+    background-color: white;
+}
+
+.dark #change-tariff-modal .modal-content {
+    background-color: #1f2937; /* bg-gray-800 */
+}
+
+#change-tariff-modal .text-gray-900,
+#change-tariff-modal .text-gray-600,
+#change-tariff-modal .text-indigo-600,
+#change-tariff-modal .text-indigo-800 {
+    color: #111827; /* text-gray-900 */
+}
+
+#change-tariff-modal .tariff-card.border-indigo-500.bg-indigo-50 .text-gray-900,
+#change-tariff-modal .tariff-card.border-indigo-500.bg-indigo-50 .text-gray-600,
+#change-tariff-modal .tariff-card.border-indigo-500.bg-indigo-50 .text-indigo-600,
+#change-tariff-modal .tariff-card.border-indigo-500.bg-indigo-50 .text-indigo-800 {
+    color: #f3f4f6; /* text-gray-100 */
+}
+
+#change-tariff-modal .tariff-card h4 {
+    color: #6b7280; /* text-gray-500 */
+}
+
+#change-tariff-modal .tariff-card .font-bold {
+    color: #16a34a; /* text-green-600 */
+}
+
+.dark #change-tariff-modal .tariff-card *,
+.dark #change-tariff-modal .tariff-card .text-gray-300,
+.dark #change-tariff-modal .tariff-card .text-blue-200,
+.dark #change-tariff-modal .tariff-card .text-green-300,
+.dark #change-tariff-modal .tariff-card .text-indigo-200,
+.dark #change-tariff-modal .tariff-card .text-gray-900,
+.dark #change-tariff-modal .tariff-card .text-gray-600,
+.dark #change-tariff-modal .tariff-card .text-indigo-600,
+.dark #change-tariff-modal .tariff-card .text-indigo-800,
+.dark #change-tariff-modal .tariff-card h4,
+.dark #change-tariff-modal .tariff-card .font-bold {
+    color: #ffffff !important; /* text-white */
+}
+
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-gray-300,
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-blue-200,
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-green-300,
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-indigo-200,
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-gray-900,
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-gray-600,
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-indigo-600,
+.dark #change-tariff-modal .tariff-card.border-indigo-700.bg-indigo-900 .text-indigo-800 {
+    color: #ffffff !important; /* text-white */
+}
 
 /* Responsive design enhancements */
-@media (max-width: 900px) {
+@media (max-width: 950px) {
     .mobile-padding {
         padding: 0.75rem;
     }
@@ -205,5 +296,39 @@ footer a:hover {
 
     .lg:col-span-1 {
         grid-column: 1;
+    }
+
+    /* Ensure desktop nav is hidden on mobile */
+    #nav-menu {
+        display: none !important;
+    }
+
+    /* Ensure burger is visible on mobile */
+    #burger-menu {
+        display: block !important;
+    }
+}
+
+@media (min-width: 951px) {
+    /* Show desktop nav and apply styles */
+    #nav-menu {
+        display: flex !important;
+        align-items: center;
+        gap: 1.5rem; /* Equivalent to space-x-6 */
+    }
+
+    /* Hide burger menu on desktop */
+    #burger-menu {
+        display: none !important;
+    }
+
+    /* Hide mobile menu on desktop */
+    #mobile-menu {
+        display: none !important;
+    }
+
+    /* Optional: Adjust h1 font size to match original md:text-2xl behavior */
+    h1 {
+        font-size: 1.5rem; /* Equivalent to text-2xl */
     }
 }

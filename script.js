@@ -405,6 +405,11 @@ function toggleTheme() {
             el.classList.remove('text-indigo-300');
             el.classList.add('text-indigo-800');
         });
+        // Изменение цвета текста в блоке Сеть
+        document.querySelectorAll('#network-block p').forEach(el => {
+            el.classList.remove('text-white');
+            el.classList.add('text-gray-700');
+        });
     } else {
         body.classList.add('dark');
         body.classList.remove('bg-gradient-to-br', 'from-blue-50', 'to-indigo-100');
@@ -479,6 +484,11 @@ function toggleTheme() {
         document.querySelectorAll('footer a').forEach(el => {
             el.classList.remove('text-indigo-800');
             el.classList.add('text-indigo-200');
+        });
+        // Изменение цвета текста в блоке Сеть
+        document.querySelectorAll('#network-block p').forEach(el => {
+            el.classList.remove('text-gray-700');
+            el.classList.add('text-white');
         });
     }
     
@@ -584,7 +594,7 @@ function loadData() {
         if (documentsList) {
             documentsList.innerHTML = documents.map(doc => `
                 <div class="p-3 md:p-4 rounded-lg border bg-gray-50">
-                    <a href="${doc.url}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm md:text-base">${doc.name}</a>
+                    <a href="${doc.url}" class="text-indigo-400 hover:text-indigo-600 font-medium text-sm md:text-base">${doc.name}</a>
                     <p class="text-xs md:text-sm text-gray-600 mt-1">${translations[currentLanguage].type_label}: ${doc.type.toUpperCase()}</p>
                 </div>
             `).join('');
@@ -601,11 +611,11 @@ function showTariffModal() {
     const tariffDetails = document.getElementById('tariff-details');
     if (tariffDetails) {
         tariffDetails.innerHTML = `
-            <h4 class="font-semibold text-gray-900 dark:text-blue-200 text-base md:text-lg">${selectedTariff.name}</h4>
-            <p class="text-gray-600 text-xs md:text-sm mt-2">${selectedTariff.description}</p>
-            <p class="text-gray-600 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${selectedTariff.speed}</p>
-            <p class="font-bold text-base md:text-lg mt-2 text-gray-900 dark:text-green-300">${formatCurrency(selectedTariff.price)}</p>
-            <p class="text-xs md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
+            <h4 class="font-semibold text-gray-900 dark:text-blue-500 text-base md:text-lg">${selectedTariff.name}</h4>
+            <p class="text-gray-600 text-xs dark:text-gray-400 md:text-sm mt-2">${selectedTariff.description}</p>
+            <p class="text-gray-600 text-xs dark:text-gray-400 md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${selectedTariff.speed}</p>
+            <p class="font-bold text-base md:text-lg mt-2 text-gray-900 dark:text-green-400">${formatCurrency(selectedTariff.price)}</p>
+            <p class="text-xs dark:text-gray-400 md:text-sm text-gray-600">${translations[currentLanguage].per_month}</p>
         `;
     }
     const tariffModal = document.getElementById('tariff-modal');
@@ -674,7 +684,7 @@ function showEditPhonesModal() {
     }
     // Обновление текста меток в тёмной теме
     document.querySelectorAll('#edit-phones-modal label').forEach(label => {
-        label.classList.add('dark:text-white');
+        label.classList.add('dark:text-gray-400');
     });
     toggleMobileMenu(false);
 }
@@ -800,7 +810,7 @@ function filterPayments(filter) {
     const filterCompleted = document.getElementById('filter-completed');
     const filterPending = document.getElementById('filter-pending');
     if (filterAll && filterCompleted && filterPending) {
-        filterAll.className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
+        filterAll.className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-00 hover:bg-gray-200'} text-sm`;
         filterCompleted.className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'completed' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
         filterPending.className = `px-3 md:px-4 py-2 rounded-lg font-medium transition-colors ${filter === 'pending' ? 'bg-yellow-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} text-sm`;
     }
@@ -816,17 +826,17 @@ function renderPayments() {
                 <td colspan="6" class="text-center py-8 text-gray-500 dark:text-gray-300 text-xs md:text-sm">${translations[currentLanguage].no_payments}</td>
             </tr>
         ` : filteredPayments.map(payment => `
-            <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-900 dark:text-gray-100">${formatPaymentDate(payment.payment_date)}</td>
-                <td class="py-2 md:py-3 px-2 font-semibold text-xs md:text-sm text-gray-900 dark:text-gray-100">${formatCurrency(payment.amount)}</td>
-                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600 dark:text-gray-300">${getPaymentMethodLabel(payment.payment_method)}</td>
-                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600 dark:text-gray-300">${payment.description}</td>
+            <tr class="border-b border-gray-100 dark:border-gray-700">
+                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-900 dark:text-gray-400">${formatPaymentDate(payment.payment_date)}</td>
+                <td class="py-2 md:py-3 px-2 font-semibold text-xs md:text-sm text-gray-900 dark:text-gray-400">${formatCurrency(payment.amount)}</td>
+                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600 dark:text-gray-400">${getPaymentMethodLabel(payment.payment_method)}</td>
+                <td class="py-2 md:py-3 px-2 text-xs md:text-sm text-gray-600 dark:text-gray-400">${payment.description}</td>
                 <td class="py-2 md:py-3 px-2">
                     <span class="inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(payment.status)}">
                         ${getStatusLabel(payment.status)}
                     </span>
                 </td>
-                <td class="py-2 md:py-3 px-2 text-xs text-gray-500 dark:text-gray-300 font-mono">${payment.transaction_id}</td>
+                <td class="py-2 md:py-3 px-2 text-xs text-gray-500 dark:text-gray-400 font-mono">${payment.transaction_id}</td>
             </tr>
         `).join('');
     }
