@@ -635,23 +635,29 @@ function showChangeTariffModal() {
     const tariffsList = document.getElementById('tariffs-list');
     if (tariffsList) {
         tariffsList.innerHTML = tariffs.map(tariff => `
-            <div class="tariff-card border rounded-lg p-3 md:p-4 cursor-pointer transition-colors ${subscriberData.subscriber.tariff_id === tariff.id ? 'border-indigo-500 bg-indigo-50 dark:border-indigo-700 dark:bg-indigo-900' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}" onclick="changeTariff(${tariff.id})">
-                <div class="flex justify-between items-start">
-                    <div class="flex-1">
-                        <h4 class="font-semibold text-gray-900 dark:text-blue-200 text-sm md:text-base flex items-center">
-                            ${tariff.name}
-                            ${subscriberData.subscriber.tariff_id === tariff.id ? `<span class="ml-2 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs px-2 py-1 rounded-full">${translations[currentLanguage].current_label}</span>` : ''}
-                        </h4>
-                        <p class="text-gray-600 dark:text-gray-300 text-xs md:text-sm">${tariff.description}</p>
-                        <p class="text-gray-600 dark:text-gray-300 text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${tariff.speed}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-bold text-base md:text-lg text-gray-900 dark:text-green-300">${formatCurrency(tariff.price)}</p>
-                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-300">${translations[currentLanguage].per_month}</p>
-                    </div>
-                </div>
+    <div class="tariff-card border rounded-lg p-3 md:p-4 cursor-pointer transition-colors
+        ${subscriberData.subscriber.tariff_id === tariff.id
+            ? 'border-indigo-500 bg-indigo-900 text-white dark:border-indigo-700 dark:bg-indigo-900 dark:text-white'
+            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-gray-900 dark:text-gray-100'}"
+        onclick="changeTariff(${tariff.id})">
+        <div class="flex justify-between items-start">
+            <div class="flex-1">
+                <h4 class="font-semibold text-sm md:text-base flex items-center ${subscriberData.subscriber.tariff_id === tariff.id ? 'text-white' : 'text-gray-900 dark:text-blue-200'}">
+                    ${tariff.name}
+                    ${subscriberData.subscriber.tariff_id === tariff.id
+                        ? `<span class="ml-2 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs px-2 py-1 rounded-full">${translations[currentLanguage].current_label}</span>`
+                        : ''}
+                </h4>
+                <p class="text-xs md:text-sm mt-1">${tariff.description}</p>
+                <p class="text-xs md:text-sm mt-1">${translations[currentLanguage].speed_label}: ${tariff.speed}</p>
             </div>
-        `).join('');
+            <div class="text-right">
+                <p class="font-bold text-base md:text-lg">${formatCurrency(tariff.price)}</p>
+                <p class="text-xs md:text-sm">${translations[currentLanguage].per_month}</p>
+            </div>
+        </div>
+    </div>
+`).join('');
     }
     const changeTariffModal = document.getElementById('change-tariff-modal');
     if (changeTariffModal) {

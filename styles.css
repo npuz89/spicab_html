@@ -4,14 +4,44 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; -webkit-transform: translateY(20px); }
+    to { opacity: 1; -webkit-transform: translateY(0); }
+}
+
+@-moz-keyframes fadeIn {
+    from { opacity: 0; -moz-transform: translateY(20px); }
+    to { opacity: 1; -moz-transform: translateY(0); }
+}
+
 @keyframes slideIn {
     from { opacity: 0; transform: translateX(-20px); }
     to { opacity: 1; transform: translateX(0); }
 }
 
+@-webkit-keyframes slideIn {
+    from { opacity: 0; -webkit-transform: translateX(-20px); }
+    to { opacity: 1; -webkit-transform: translateX(0); }
+}
+
+@-moz-keyframes slideIn {
+    from { opacity: 0; -moz-transform: translateX(-20px); }
+    to { opacity: 1; -moz-transform: translateX(0); }
+}
+
 @keyframes modalFadeIn {
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
+}
+
+@-webkit-keyframes modalFadeIn {
+    from { opacity: 0; -webkit-transform: scale(0.9); }
+    to { opacity: 1; -webkit-transform: scale(1); }
+}
+
+@-moz-keyframes modalFadeIn {
+    from { opacity: 0; -moz-transform: scale(0.9); }
+    to { opacity: 1; -moz-transform: scale(1); }
 }
 
 @keyframes gradientShift {
@@ -20,21 +50,47 @@
     100% { background-position: 0% 50%; }
 }
 
+@-webkit-keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@-moz-keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .card-hover {
     transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
 }
 
 .card-hover:hover {
     transform: translateY(-2px);
+    -webkit-transform: translateY(-2px);
+    -moz-transform: translateY(-2px);
+    -o-transform: translateY(-2px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    -webkit-box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    -moz-box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .notification-item {
     transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
 }
 
 .notification-item:hover {
     transform: translateX(4px);
+    -webkit-transform: translateX(4px);
+    -moz-transform: translateX(4px);
+    -o-transform: translateX(4px);
 }
 
 .tariff-card {
@@ -50,12 +106,21 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: -webkit-linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: -moz-linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: -o-linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     transition: left 0.5s;
+    -webkit-transition: left 0.5s;
+    -moz-transition: left 0.5s;
+    -o-transition: left 0.5s;
 }
 
 .tariff-card:hover::before {
     left: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    background: -webkit-linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    background: -moz-linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    background: -o-linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
 }
 
 .loading-spinner {
@@ -65,6 +130,8 @@
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -72,13 +139,46 @@
     100% { transform: rotate(360deg); }
 }
 
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@-moz-keyframes spin {
+    0% { -moz-transform: rotate(0deg); }
+    100% { -moz-transform: rotate(360deg); }
+}
+
+/* Общие стили модалки в светлой и тёмной теме */
 .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
-    animation: fadeIn 0.2s ease-out;
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
 }
 
 .modal-content {
-    animation: modalFadeIn 0.3s ease-out;
+    background-color: white;
+    color: #111827; /* text-gray-900 */
+}
+
+/* Тёмная тема */
+.dark .modal-content {
+    background-color: #1f2937; /* bg-gray-800 */
+    color: #d1d5db; /* text-gray-300 */
+}
+
+.dark .modal-content svg {
+    stroke: #d1d5db; /* или white */
+}
+
+/* Перекрыть Tailwind цвета */
+.dark .modal-content * {
+    color: inherit !important;
+    background-color: transparent;
 }
 
 .currency-display {
@@ -88,12 +188,20 @@
 
 .discount-block {
     display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
     align-items: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
     justify-content: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
 }
 
 .language-selector {
     appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>') no-repeat right 0.5rem center/1rem;
 }
 
@@ -108,6 +216,9 @@
 
 .underline:hover {
     transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
     text-decoration: none;
 }
 
@@ -117,9 +228,17 @@ footer {
 
 footer .flex {
     display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
     justify-content: space-between;
+    -webkit-justify-content: space-between;
+    -moz-justify-content: space-between;
     align-items: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
     flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
     gap: 1rem;
 }
 
@@ -127,6 +246,9 @@ footer span,
 footer a {
     font-size: 0.875rem; /* 14px */
     transition: color 0.3s ease;
+    -webkit-transition: color 0.3s ease;
+    -moz-transition: color 0.3s ease;
+    -o-transition: color 0.3s ease;
 }
 
 footer a:hover {
@@ -139,10 +261,16 @@ footer a:hover {
     height: 40px;
     object-fit: contain;
     transition: transform 0.3s ease;
+    -webkit-transition: transform 0.3s ease;
+    -moz-transition: transform 0.3s ease;
+    -o-transition: transform 0.3s ease;
 }
 
 .header-logo:hover {
     transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
 }
 
 /* Стили для модального окна платежей */
@@ -164,6 +292,7 @@ footer a:hover {
 
 #payments-modal table {
     width: 100%;
+    border-collapse: collapse;
 }
 
 #payments-modal th, #payments-modal td {
@@ -226,6 +355,10 @@ footer a:hover {
     color: #ffffff !important; /* text-white */
 }
 
+.active{
+    color: white
+}
+
 /* Responsive design enhancements */
 @media (max-width: 950px) {
     .mobile-padding {
@@ -238,7 +371,11 @@ footer a:hover {
     
     .mobile-stack {
         display: flex;
+        display: -webkit-flex;
+        display: -moz-flex;
         flex-direction: column;
+        -webkit-flex-direction: column;
+        -moz-flex-direction: column;
         gap: 0.75rem;
     }
 
@@ -272,7 +409,6 @@ footer a:hover {
         font-size: 0.65rem;
     }
 
-    /* Burger menu styles */
     #burger-menu svg {
         width: 24px;
         height: 24px;
@@ -280,6 +416,8 @@ footer a:hover {
 
     #mobile-menu {
         animation: slideIn 0.3s ease-out;
+        -webkit-animation: slideIn 0.3s ease-out;
+        -moz-animation: slideIn 0.3s ease-out;
     }
 
     .language-selector {
@@ -287,6 +425,7 @@ footer a:hover {
     }
 
     main .grid {
+        display: grid;
         grid-template-columns: 1fr;
     }
 
@@ -298,37 +437,35 @@ footer a:hover {
         grid-column: 1;
     }
 
-    /* Ensure desktop nav is hidden on mobile */
     #nav-menu {
         display: none !important;
     }
 
-    /* Ensure burger is visible on mobile */
     #burger-menu {
         display: block !important;
     }
 }
 
 @media (min-width: 951px) {
-    /* Show desktop nav and apply styles */
     #nav-menu {
         display: flex !important;
+        display: -webkit-flex !important;
+        display: -moz-flex !important;
         align-items: center;
-        gap: 1.5rem; /* Equivalent to space-x-6 */
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        gap: 1.5rem;
     }
 
-    /* Hide burger menu on desktop */
     #burger-menu {
         display: none !important;
     }
 
-    /* Hide mobile menu on desktop */
     #mobile-menu {
         display: none !important;
     }
 
-    /* Optional: Adjust h1 font size to match original md:text-2xl behavior */
     h1 {
-        font-size: 1.5rem; /* Equivalent to text-2xl */
+        font-size: 1.5rem;
     }
 }

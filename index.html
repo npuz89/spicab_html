@@ -8,7 +8,32 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link href="styles.css" rel="stylesheet"/>
+<style>
+        /* CSS ресет для кроссбраузерности */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+        }
+    </style>
+
+    <script>
+  tailwind.config = {
+    darkMode: 'class',
+    safelist: [
+      'dark:bg-gray-800', 'dark:text-gray-100',
+      'dark:bg-indigo-900', 'dark:text-indigo-200'
+    ]
+  };
+</script>
 </head>
+
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-sans transition-colors duration-300" id="body">
 <!-- Loading Screen -->
 <div class="min-h-screen flex items-center justify-center" id="loading">
@@ -47,7 +72,7 @@
 <button class="text-gray-600 hover:text-indigo-600 font-medium transition-colors" data-i18n="payment_history" onclick="showPaymentsModal()">История платежей</button>
 <button class="text-gray-600 hover:text-indigo-600 font-medium transition-colors" data-i18n="change_password" onclick="showChangePasswordModal()">Сменить пароль</button>
 <div class="relative">
-<select class="text-gray-600 hover:text-indigo-600 font-medium bg-transparent border-none focus:outline-none cursor-pointer language-selector w-14" id="language-selector" onchange="changeLanguage(this.value)">
+<select class="text-gray-600 hover:text-indigo-600 font-medium bg-transparent border-none focus:outline-none cursor-pointer language-selector w-14" id="language-selector-mobile" onchange="changeLanguage(this.value)">
 <option value="ru">RU</option>
 <option value="uz">UZ</option>
 <option value="en">EN</option>
@@ -68,7 +93,7 @@
                         <button onclick="showPaymentsModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors text-left" data-i18n="payment_history">История платежей</button>
                         <button onclick="showChangePasswordModal()" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors text-left" data-i18n="change_password">Сменить пароль</button>
                         <div class="relative">
-                            <select id="language-selector" class="text-gray-600 hover:text-indigo-600 font-medium bg-transparent border-none focus:outline-none cursor-pointer w-24 text-left language-selector" onchange="changeLanguage(this.value)">
+                            <select id="language-selector-desktop" class="text-gray-600 hover:text-indigo-600 font-medium bg-transparent border-none focus:outline-none cursor-pointer w-24 text-left language-selector" onchange="changeLanguage(this.value)">
                                 <option value="ru">RU</option>
                                 <option value="uz">UZ</option>
                                 <option value="en">EN</option>
