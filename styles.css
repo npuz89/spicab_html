@@ -446,6 +446,105 @@ footer a:hover {
     }
 }
 
+
+/* Стили для переключателей */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #4f46e5;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+/* Адаптивные стили для модального окна услуг */
+@media (max-width: 768px) {
+    #services-modal .modal-content {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    #services-management-list .grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .toggle-switch {
+        width: 50px;
+        height: 28px;
+    }
+    
+    .toggle-slider:before {
+        height: 22px;
+        width: 22px;
+    }
+    
+    input:checked + .toggle-slider:before {
+        transform: translateX(22px);
+    }
+}
+
+/* Стили для тёмной темы */
+.dark .toggle-slider {
+    background-color: #4b5563;
+}
+
+.dark input:checked + .toggle-slider {
+    background-color: #6366f1;
+}
+
+.dark .services-item {
+    background-color: #374151;
+    border-color: #4b5563;
+}
+
+.dark .services-item h4,
+.dark .services-item h5,
+.dark .services-item h6 {
+    color: #f3f4f6;
+}
+
+.dark .services-item p {
+    color: #d1d5db;
+}
+
+
+
 @media (min-width: 951px) {
     #nav-menu {
         display: flex !important;

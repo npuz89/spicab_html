@@ -61,6 +61,8 @@ const documents = [
 ];
 
 const translations = {
+
+
     ru: {
         loading: 'Загрузка...',
         dashboard: 'Личный кабинет',
@@ -114,7 +116,20 @@ const translations = {
         password_mismatch: 'Новый пароль и подтверждение не совпадают',
         invalid_current_password: 'Неверный текущий пароль',
         no_notifications: 'Нет уведомлений',
-        no_payments: 'Нет платежей в выбранной категории'
+        no_payments: 'Нет платежей в выбранной категории',
+
+        manage_services: 'Управление',
+        real_ip: 'Реальный IP',
+        trust_payment: 'Доверительный платёж', 
+        active_subscriptions: 'Активные подписки',
+        enable: 'Включить',
+        auto_renewal: 'Авто продление',
+        price_per_month: 'Цена: {price} / мес',
+        end_of_trust: 'Окончание доверительного',
+        not_installed: 'Не установлено'
+
+        
+
     },
     uz: {
         loading: 'Yuklanmoqda...',
@@ -169,7 +184,20 @@ const translations = {
         password_mismatch: 'Yangi parol va tasdiqlash mos kelmaydi',
         invalid_current_password: 'Noto‘g‘ri joriy parol',
         no_notifications: 'Bildirishnomalar yo‘q',
-        no_payments: 'Tanlangan toifada to‘lovlar yo‘q'
+        no_payments: 'Tanlangan toifada to‘lovlar yo‘q',
+
+         // ... остальные переводы ...
+        manage_services: 'Boshqarish',
+        real_ip: 'Haqiqiy IP',
+        trust_payment: 'Ishonchli to‘lov', 
+        active_subscriptions: 'Faol obunalar',
+        enable: 'Yoqish',
+        auto_renewal: 'Avto uzaytirish',
+        price_per_month: 'Narx: {price} / oy',
+        end_of_trust: 'Ishonch tugashi',
+        not_installed: 'O‘rnatilmagan',
+
+
     },
     en: {
         loading: 'Loading...',
@@ -224,9 +252,187 @@ const translations = {
         password_mismatch: 'New password and confirmation do not match',
         invalid_current_password: 'Incorrect current password',
         no_notifications: 'No notifications',
-        no_payments: 'No payments in the selected category'
+        no_payments: 'No payments in the selected category',
+
+        manage_services: 'Manage',
+        real_ip: 'Real IP',
+        trust_payment: 'Trust payment', 
+        active_subscriptions: 'Active subscriptions',
+        enable: 'Enable',
+        auto_renewal: 'Auto renewal',
+        price_per_month: 'Price: {price} / month',
+        end_of_trust: 'End of trust',
+        not_installed: 'Not installed',
     }
+
+    
 };
+
+
+
+
+// Добавим данные услуг
+const servicesData = [
+    {
+        id: 1,
+        name: 'Реальный IP',
+        status: 'Активно',
+        ip: '93.170.220.37',
+        expiration: '2025-09-16',
+        autoRenewal: true,
+        price: 30000,
+        type: 'ip'
+    },
+    {
+        id: 2, 
+        name: 'Доверительный платёж',
+        status: 'Не установлено',
+        expiration: '2025-08-20',
+        autoRenewal: false,
+        type: 'trust'
+    },
+    {
+        id: 3,
+        name: 'AllPlay',
+        status: 'Активно',
+        subscriptions: [
+            {
+                name: 'Four In Play',
+                status: 'Активно',
+                expiration: '2025-09-15 15:14:53',
+                autoRenewal: false
+            },
+            {
+                name: 'Online TV Premium', 
+                status: 'Активно',
+                expiration: '2025-09-14 23:13:56',
+                autoRenewal: false
+            }
+        ],
+        type: 'allplay'
+    }
+];
+
+
+// Функции для работы с модальным окном услуг
+function showServicesModal() {
+    const servicesList = document.getElementById('services-management-list');
+    if (servicesList) {
+        servicesList.innerHTML = servicesData.map(service => {
+            if (service.type === 'ip') {
+                return `
+                    <div class="border rounded-lg p-4 dark:border-gray-700">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">${service.name}</h4>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs rounded-full">${service.status}</span>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 mb-4">
+                            <div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">IP: ${service.ip}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${formatDate(service.expiration)}</p>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="auto-renewal-${service.id}" ${service.autoRenewal ? 'checked' : ''} 
+                                    class="mr-2" onchange="toggleAutoRenewal(${service.id})">
+                                <label for="auto-renewal-${service.id}" class="text-sm text-gray-600 dark:text-gray-400">${translations[currentLanguage].auto_renewal}</label>
+                            </div>
+                        </div>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">${translations[currentLanguage].price_per_month.replace('{price}', formatCurrency(service.price))}</p>
+                    </div>
+                `;
+            } else if (service.type === 'trust') {
+                return `
+                    <div class="border rounded-lg p-4 dark:border-gray-700">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">${service.name}</h4>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs rounded-full">${service.status}</span>
+                        </div>
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">${translations[currentLanguage].end_of_trust}: ${formatDate(service.expiration)}</p>
+                        </div>
+                        <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm" 
+                                onclick="enableTrustPayment(${service.id})">${translations[currentLanguage].enable}</button>
+                    </div>
+                `;
+            } else if (service.type === 'allplay') {
+                return `
+                    <div class="border rounded-lg p-4 dark:border-gray-700">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">${service.name}</h4>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs rounded-full">${service.status}</span>
+                        </div>
+                        <h5 class="font-medium text-gray-900 dark:text-gray-100 mb-3">${translations[currentLanguage].active_subscriptions}</h5>
+                        <div class="space-y-3">
+                            ${service.subscriptions.map(sub => `
+                                <div class="border rounded-lg p-3 dark:border-gray-600">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h6 class="font-medium text-gray-900 dark:text-gray-100">${sub.name}</h6>
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs rounded-full">${sub.status}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">${sub.expiration}</p>
+                                    <div class="flex items-center">
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" ${sub.autoRenewal ? 'checked' : ''} 
+                                                class="sr-only peer" onchange="toggleSubscriptionAutoRenewal(${service.id}, '${sub.name}')">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600"></div>
+                                            <span class="ml-3 text-sm text-gray-600 dark:text-gray-400">${translations[currentLanguage].auto_renewal}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }).join('');
+    }
+    
+    const servicesModal = document.getElementById('services-modal');
+    if (servicesModal) {
+        servicesModal.classList.remove('hidden');
+    }
+    toggleMobileMenu(false);
+}
+
+function closeServicesModal() {
+    const servicesModal = document.getElementById('services-modal');
+    if (servicesModal) {
+        servicesModal.classList.add('hidden');
+    }
+}
+
+function toggleAutoRenewal(serviceId) {
+    const service = servicesData.find(s => s.id === serviceId);
+    if (service) {
+        service.autoRenewal = !service.autoRenewal;
+        // Здесь можно добавить API вызов для сохранения изменений
+        console.log(`Auto renewal for ${service.name}: ${service.autoRenewal}`);
+    }
+}
+
+function enableTrustPayment(serviceId) {
+    const service = servicesData.find(s => s.id === serviceId);
+    if (service) {
+        service.status = 'Активно';
+        // Здесь можно добавить API вызов для активации услуги
+        console.log(`Enabled trust payment: ${service.name}`);
+        showServicesModal(); // Обновляем модальное окно
+    }
+}
+
+function toggleSubscriptionAutoRenewal(serviceId, subscriptionName) {
+    const service = servicesData.find(s => s.id === serviceId);
+    if (service && service.subscriptions) {
+        const subscription = service.subscriptions.find(sub => sub.name === subscriptionName);
+        if (subscription) {
+            subscription.autoRenewal = !subscription.autoRenewal;
+            // Здесь можно добавить API вызов для сохранения изменений
+            console.log(`Auto renewal for ${subscription.name}: ${subscription.autoRenewal}`);
+        }
+    }
+}
+
+
 
 let paymentFilter = 'all';
 let selectedTariff = null;
@@ -939,3 +1145,6 @@ function initializeInternetUsageChart() {
         }
     });
 }
+
+
+

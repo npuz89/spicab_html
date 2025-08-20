@@ -166,7 +166,7 @@
 
   <div class="bg-gray-50 rounded-lg p-3 md:p-4">
     <h4 class="text-xs md:text-sm font-medium text-gray-600 mb-2">Скидка</h4>
-    <p class="text-xl md:text-2xl font-bold text-gray-900" id="discount-percentage">15%</p>
+    <p class="text-xl md:text-2xl font-bold text-green-600" id="discount-percentage">15%</p>
   </div>
 
 </div>
@@ -194,9 +194,34 @@
 <div class="lg:col-span-1">
 <!-- Services Block -->
 <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
-<h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="services">Услуги</h3>
-<div class="space-y-3" id="services-list"></div>
+    <div class="flex justify-between items-center mb-3 md:mb-4">
+        <h3 class="text-base md:text-lg font-semibold text-gray-900" data-i18n="services">Услуги</h3>
+        <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors text-sm md:text-base" 
+                onclick="showServicesModal()" data-i18n="manage_services">Управление</button>
+    </div>
+    <div class="space-y-3" id="services-list"></div>
 </div>
+
+
+<!-- Добавим модальное окно для управления услугами (в конец файла перед </div>) -->
+<div class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden flex items-center justify-center z-50 p-4" id="services-modal">
+    <div class="bg-white dark:bg-gray-800 rounded-xl w-full max-w-4xl p-4 md:p-6 max-h-[90vh] overflow-y-auto modal-content">
+        <div class="flex justify-between items-start mb-4 md:mb-6">
+            <h3 class="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100" data-i18n="manage_services">Управление услугами</h3>
+            <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="closeServicesModal()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                    <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="space-y-6" id="services-management-list"></div>
+    </div>
+</div>
+
+
+
+
+
 <!-- Documents Block -->
 <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
 <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4" data-i18n="documents">Документы</h3>
